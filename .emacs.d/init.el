@@ -290,6 +290,3 @@
   :ensure t)
 
 (moe-theme-set-color 'cyan)
-
-;; GIT SYNC TEST
-;; Git sync test 2
