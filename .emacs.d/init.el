@@ -292,7 +292,9 @@
   (global-set-key (kbd "C-x g") 'magit-status))
 
 (use-package rainbow-mode
-  :ensure t)
+  :ensure t
+  ;; css colors display inline
+  )
 
 (moe-theme-set-color 'cyan)
 
@@ -303,14 +305,17 @@
   :ensure t
   :init
   (global-flycheck-mode t)
+  ;; Ran `gem install sqlint` to get this exe
+  ;; C-c ! v - Go to menu to enable stuff
   (setq flycheck-sql-sqlint-executable "/usr/local/bin/sqlint"))
-
-;; C-c ! v - Go to menu to enable stuff
 
 (use-package clojure-snippets
   :ensure t
   :config
-  (add-hook 'clojure-mode-hook 'yas-minor-mode-on))
+  (add-hook 'clojure-mode-hook 'yas-minor-mode-on)
+  (define-key yas-minor-mode-map (kbd "<tab>") nil)
+  (define-key yas-minor-mode-map (kbd "TAB") nil)
+  (define-key yas-minor-mode-map (kbd "<C-tab>") 'yas-expand))
 
 (provide 'init)
 ;;; init.el ends here
