@@ -1,3 +1,7 @@
+;;; init.el --- My cobbled together emacs config
+
+;;; Commentary:
+
 ;; Started this by following along with...
 ;; http://cestlaz.github.io/posts/using-emacs-1-setup/#.WX0dGtPyto4
 ;; It has evolved to include other things I commonly use
@@ -5,8 +9,9 @@
 ;; Basic Editor Config
 ;; ===================
 
-(custom-set-variables
- '(initial-frame-alist (quote ((fullscreen . maximized)))))
+;;; Code:
+
+(setq initial-frame-alist (quote ((fullscreen . maximized))))
 (setq initial-scratch-message nil)
 (setq inhibit-startup-message t)
 (setq ring-bell-function 'ignore)
@@ -290,3 +295,22 @@
   :ensure t)
 
 (moe-theme-set-color 'cyan)
+
+;; Experimental
+;; ============
+
+(use-package flycheck
+  :ensure t
+  :init
+  (global-flycheck-mode t)
+  (setq flycheck-sql-sqlint-executable "/usr/local/bin/sqlint"))
+
+;; C-c ! v - Go to menu to enable stuff
+
+(use-package clojure-snippets
+  :ensure t
+  :config
+  (add-hook 'clojure-mode-hook 'yas-minor-mode-on))
+
+(provide 'init)
+;;; init.el ends here

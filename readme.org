@@ -1,0 +1,19 @@
+* The plan
+I'd like to be able to quickly sync the important files that I share across computers
+Should be as easy as cloning a git repo and being in business
+
+** Files
+- .emacs.d/init.el
+- .bash_profile
+
+** Value
+- emacs init file makes it easy to jump right into using emacs
+- .bash_profile helps get things like aliases and environment variable right
+
+** What needs to be done
+* TODO Create repository
+** DONE Add .emacs.d/init.el file
+** TODO Add .bash_profile file
+* TODO Create script to sync
+** DONE Add figure out bash necessary to create a sync file
+** TODO Determine a safe way to include placeholders for passwords
