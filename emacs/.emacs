@@ -126,8 +126,10 @@
 (use-package swiper
   :ensure t
   :config
-  ;; NOTE: When using M-x to rgrep, it's useful to know C-u C-j.
+  ;; NOTE: When using M-x to rgrep, it's useful to know 'ivy-immediate-done.
   ;; It will allow you to specify *.clj* as a raw input, without having to use a completion
+  ;; It is normally mapped to C-u C-j, but there was a suggestion that I liked here
+  ;; https://github.com/abo-abo/swiper/issues/55
   (ivy-mode 1)
   (setq ivy-wrap t)
   (setq ivy-height 10)
@@ -150,6 +152,7 @@
   (global-set-key (kbd "C-c k") 'counsel-ag)
   (global-set-key (kbd "C-x l") 'counsel-locate)
   (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+  (global-set-key (kbd "<C-return>") 'ivy-immediate-done)
   (define-key read-expression-map (kbd "C-r") 'counsel-expression-history))
 
 (use-package projectile
