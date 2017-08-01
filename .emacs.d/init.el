@@ -126,6 +126,8 @@
 (use-package swiper
   :ensure t
   :config
+  ;; NOTE: When using M-x to rgrep, it's useful to know C-u C-j.
+  ;; It will allow you to specify *.clj* as a raw input, without having to use a completion
   (ivy-mode 1)
   (setq ivy-wrap t)
   (setq ivy-height 10)
@@ -150,12 +152,15 @@
   (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
   (define-key read-expression-map (kbd "C-r") 'counsel-expression-history))
 
+(use-package projectile
+  :disabled)
+
 (use-package avy
   :ensure t
   ;; avy-goto-char maps every occurence of a typed char to a series of keys.
   ;; Typing the matching series will nav to a specific area in the visible buffer.
   ;; In a clojure file, `M-s (` is useful to get to the start of a visible form
-  :bind ("M-s" . avy-goto-word-1))
+  :bind ("C-q" . avy-goto-word-1))
 
 (use-package auto-complete
   :ensure t
@@ -212,6 +217,7 @@
   :config
   (setq smex-save-file (concat user-emacs-directory ".smex-items"))
   (smex-initialize)
+  ;; Useful for completions, used to be what I used for M-x
   (global-set-key (kbd "M-z") 'smex))
 
 (use-package recentf
