@@ -59,6 +59,9 @@
 (global-set-key (kbd "M-s-∆") 'windmove-left) ;; M-s-j
 (global-set-key (kbd "M-s-¬") 'windmove-right);; M-s-l
 
+;; s-w will kill current buffer, s-e is close and will try to kill a bunch
+(global-set-key (kbd "s-e") 'kill-some-buffers)
+
 ;; Unbind the window minimizing behavior (suspend-frame)
 (global-unset-key (kbd "C-z"))
 
@@ -131,7 +134,7 @@
   ;; It is normally mapped to C-u C-j, but there was a suggestion that I liked here
   ;; https://github.com/abo-abo/swiper/issues/55
   (ivy-mode 1)
-  (setq ivy-wrap t)
+  (setq ivy-wrap nil)
   (setq ivy-height 10)
   (setq ivy-use-virtual-buffers t)
   (setq confirm-nonexistent-file-or-buffer t)
@@ -326,6 +329,7 @@
   (define-key yas-minor-mode-map (kbd "TAB") nil)
   (define-key yas-minor-mode-map (kbd "<C-tab>") 'yas-expand))
 
+;; Found on sacha chua's blog, more useful to me than normal C-a
 (defun sacha/smarter-move-beginning-of-line (arg)
   "Move point back to indentation of beginning of line.
 
