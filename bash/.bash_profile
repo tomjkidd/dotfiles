@@ -58,6 +58,6 @@ alias clj-server-repl='java -cp ~/.m2/repository/org/clojure/clojure/1.8.0/cloju
 source /usr/local/etc/bash_completion.d/git-completion.bash
 
 # Secrets : Stuff I don't want to put in github...
-if [ -e .bash_secrets ]; then
-    source .bash_secrets
+if [ -f ~/.bash_secrets ]; then
+    source ~/.bash_secrets
 fi
