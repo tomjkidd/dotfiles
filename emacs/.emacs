@@ -118,7 +118,7 @@
 
 ;; window management...
 (winner-mode -1)
-(windmove-default-keybindings)
+;;(windmove-default-keybindings)
 
 (use-package ivy-hydra
   :ensure t)
@@ -356,6 +356,28 @@ point reaches the beginning or end of the buffer, stop there."
 ;; remap C-a to `smarter-move-beginning-of-line'
 (global-set-key [remap move-beginning-of-line]
                 'sacha/smarter-move-beginning-of-line)
+
+(use-package beacon
+  :ensure t
+  :config
+  (beacon-mode 1)
+  (setq beacon-color "#FF0000"))
+
+(use-package hungry-delete
+  :ensure t
+  :config
+  (global-hungry-delete-mode 1)
+  ;(setq beacon-color "#FF0000")
+  )
+
+(use-package expand-region
+  :ensure t
+  :config
+  ;; This finally provides a nice way to select and entire s-expr!
+  ;; If you are at the starting paren, C-= will select up to the
+  ;; matching closing paren. This makes quick C-w for yanking an
+  ;; s-expr to move it, tasty!
+  (global-set-key (kbd "C-=") 'er/expand-region))
 
 (provide 'init)
 ;;; init.el ends here
