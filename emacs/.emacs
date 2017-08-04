@@ -130,7 +130,9 @@
   :ensure t)
 
 (use-package counsel
-  :ensure t)
+  :ensure t
+  ;;counsel-yank-pop is useful to see the kill-ring history
+  )
 
 (use-package swiper
   :ensure t
@@ -161,6 +163,7 @@
   (global-set-key (kbd "C-c k") 'counsel-ag)
   (global-set-key (kbd "C-x l") 'counsel-locate)
   (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+  (global-set-key (kbd "M-y") 'counsel-yank-pop)
   (global-set-key (kbd "<C-return>") 'ivy-immediate-done)
   (define-key read-expression-map (kbd "C-r") 'counsel-expression-history))
 
