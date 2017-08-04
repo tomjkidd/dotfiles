@@ -398,6 +398,11 @@ point reaches the beginning or end of the buffer, stop there."
   ;; s-expr to move it, tasty!
   (global-set-key (kbd "C-=") 'er/expand-region))
 
+(use-package command-log-mode
+  :ensure t
+  :config
+  (global-command-log-mode t))
+
 (provide 'init)
 ;;; init.el ends here
 (custom-set-variables
