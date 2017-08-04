@@ -126,6 +126,11 @@
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
 
+(use-package ag
+  :ensure t
+  ;; Ran `brew install the_silver_searcher` to get this exe
+)
+
 (use-package ivy-hydra
   :ensure t)
 
@@ -403,6 +408,9 @@ point reaches the beginning or end of the buffer, stop there."
   :config
   (global-command-log-mode t))
 
+(global-set-key (kbd "s-s") 'isearch-forward-regexp)
+(global-set-key (kbd "s-r") 'isearch-backward-regexp)
+
 (provide 'init)
 ;;; init.el ends here
 (custom-set-variables
@@ -412,7 +420,7 @@ point reaches the beginning or end of the buffer, stop there."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (flycheck-joker markdown-mode clojure-snippets flycheck rainbow-mode magit cider clojure-mode rainbow-delimiters paredit sr-speedbar smex monokai-theme moe-theme powerline auto-complete counsel ivy-hydra ace-window org-bullets which-key try use-package))))
+    (ag flycheck-joker markdown-mode clojure-snippets flycheck rainbow-mode magit cider clojure-mode rainbow-delimiters paredit sr-speedbar smex monokai-theme moe-theme powerline auto-complete counsel ivy-hydra ace-window org-bullets which-key try use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
