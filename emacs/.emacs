@@ -8,6 +8,25 @@
 
 ;;; Code:
 
+;; Package Setup
+;; =============
+
+(require 'package)
+;; Disables automatic package loading, see `Packaging Basics`
+(setq package-enable-at-startup nil)
+;; see `Creating and Maintaining Package Archives`
+;; Form is (<id> . <location>)
+;; <id> and <location> are strings, <location> can be an http link or dir
+(add-to-list 'package-archives
+	     '("melpa" . "https://melpa.org/packages/"))
+
+;; See `Packaging Basics`
+(package-initialize)
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
 ;; Basic Editor Config
 ;; ===================
 
@@ -50,26 +69,35 @@
 (global-hl-line-mode +1)
 
 ;; highlight matching parens
-(show-paren-mode)
-; 'expression | 'parenthesis
-(setq show-paren-style 'parenthesis)
+(use-package paren
+  :ensure t
+  :config
+  (show-paren-mode)
+  ; 'expression | 'parenthesis
+  (setq show-paren-style 'parenthesis))
 
 ;; This can be used to configure do things like show the lambda symbol instead of defn
 ;; don't worry about that for now.
 (global-prettify-symbols-mode -1)
 
 ;; show whitespace in a sane manner, clean up on save
-; C-h v whitespace-style
-(global-whitespace-mode 1)
-(setq whitespace-style '(face trailing spaces empty indentation::space space-before-tab space-before-tab::tab space-mark))
-;(add-hook 'prog-mode-hook 'whitespace-mode)
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(use-package whitespace
+  :ensure t
+  :config
+  ; C-h v whitespace-style
+  (global-whitespace-mode 1)
+  (setq whitespace-style '(face trailing spaces empty indentation::space space-before-tab space-before-tab::tab space-mark))
+  ;(add-hook 'prog-mode-hook 'whitespace-mode)
+  (add-hook 'before-save-hook 'delete-trailing-whitespace))
 
 ;; ido - interactively do
 ;; TODO: checkout ido-ubiquitous package
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(ido-mode 1)
+(use-package ido
+  :ensure t
+  :config
+  (setq ido-enable-flex-matching t)
+  (setq ido-everywhere t)
+  (ido-mode 1))
 
 ;; configure isearch so that it still has keybindings
 (global-set-key (kbd "s-s") 'isearch-forward-regexp)
@@ -99,24 +127,7 @@
 ;; This is overkill for what I'm up to at the moment...
 ;;(org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
 
-;; Package Setup
-;; =============
 
-(require 'package)
-;; Disables automatic package loading, see `Packaging Basics`
-(setq package-enable-at-startup nil)
-;; see `Creating and Maintaining Package Archives`
-;; Form is (<id> . <location>)
-;; <id> and <location> are strings, <location> can be an http link or dir
-(add-to-list 'package-archives
-	     '("melpa" . "https://melpa.org/packages/"))
-
-;; See `Packaging Basics`
-(package-initialize)
-
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
 
 ;; allow emacs to find programs on $PATH
 (use-package exec-path-from-shell
