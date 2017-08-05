@@ -225,8 +225,7 @@
   (global-set-key [remap other-window] 'ace-window)
   (custom-set-faces
    '(aw-leading-char-face
-     ((t (:inherit ace-jump-face-foreground :height 2.0)))))
-  (setq aw-dispatch-always t))
+     ((t (:inherit ace-jump-face-foreground :height 2.0))))))
 
 ;; provide ag (the silver surfer) for fast searches
 (use-package ag
