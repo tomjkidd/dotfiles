@@ -3,6 +3,17 @@
 I really liked how the videos at [[http://cestlaz.github.io/stories/emacs/][cestlaz]] were short and focused on the practical use of the packages that were being shared.
 This file is meant to share in that spirit, and capture specific value I get from certain packages.
 
+* avy
+
+avy allows navigation across all visible buffers in the window using a character based decision tree.
+
+| Command name    | Command keys | Description                                                                                  |
+|-----------------+--------------+----------------------------------------------------------------------------------------------|
+| ayv-goto-word-1 | C-q          | Type a single character and the window is given multi-key shortcuts to nav to any occurence. |
+
+This is really useful for jumping to a particular place in any of the visible buffers,
+so when you have a lot of related code open together, you can easily jump to exact locations.
+
 * command-log-mode
 
 command-log-mode is useful for pairing or showing off what you're doing in emacs in a way that is friendly for others to watch.
@@ -14,17 +25,6 @@ command-log-mode is useful for pairing or showing off what you're doing in emacs
 
 The toggle opens up a menu on the right hand side of the screen, which captures each command you perform as a list.
 This is superior to the keyboard capturing programs in that the list remains, and automatically scrolls, so you don't have to catch fleeting glimpses.
-
-* avy
-
-avy allows navigation across all visible buffers in the window using a character based decision tree.
-
-| Command name    | Command keys | Description                                                                                  |
-|-----------------+--------------+----------------------------------------------------------------------------------------------|
-| ayv-goto-word-1 | C-q          | Type a single character and the window is given multi-key shortcuts to nav to any occurence. |
-
-This is really useful for jumping to a particular place in any of the visible buffers,
-so when you have a lot of related code open together, you can easily jump to exact locations.
 
 * swiper
 
