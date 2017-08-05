@@ -6,64 +6,98 @@
 ;; http://cestlaz.github.io/posts/using-emacs-1-setup/#.WX0dGtPyto4
 ;; It has evolved to include other things I commonly use
 
+;;; Code:
+
 ;; Basic Editor Config
 ;; ===================
 
-;;; Code:
-
+;; expand to full-screen
 (setq initial-frame-alist (quote ((fullscreen . maximized))))
+
+;; don't show various things
 (setq initial-scratch-message nil)
 (setq inhibit-startup-message t)
-(setq ring-bell-function 'ignore)
 (tool-bar-mode -1)
-(global-linum-mode t)
-(fset 'yes-or-no-p 'y-or-n-p)
+(when (fboundp 'scroll-bar-mode)
+  (scroll-bar-mode -1))
+
+;; don't do distracting things
+(setq ring-bell-function 'ignore)
+(blink-cursor-mode -1)
+
+;; don't lock files or backup
 ;; https://stackoverflow.com/questions/151945/how-do-i-control-how-emacs-makes-backup-files
 (setq make-backup-files nil)
 (setq create-lockfiles nil)
+
+;; don't allow tab indentation
 (setq-default indent-tabs-mode nil)
-(blink-cursor-mode -1)
-(global-prettify-symbols-mode -1)
-(global-hl-line-mode +1)
-(when (fboundp 'scroll-bar-mode)
-  (scroll-bar-mode -1))
-(show-paren-mode)
-; 'expression | 'parenthesis
-(setq show-paren-style 'parenthesis)
+
+;; disable electric-indent-mode, I prefer C-j
 (setq electric-indent-mode nil)
+
+;; Unbind the window minimizing behavior (suspend-frame)
+(global-unset-key (kbd "C-z"))
+
+;; quick y/n instead of yes/no
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; format buffer title
 ;; %b - buffername | %f - filepath
 (setq-default frame-title-format "%b")
 
+;; highlight the line the cursor is on
+(global-hl-line-mode +1)
+
+;; highlight matching parens
+(show-paren-mode)
+; 'expression | 'parenthesis
+(setq show-paren-style 'parenthesis)
+
+;; This can be used to configure do things like show the lambda symbol instead of defn
+;; don't worry about that for now.
+(global-prettify-symbols-mode -1)
+
+;; show whitespace in a sane manner, clean up on save
 ; C-h v whitespace-style
 (global-whitespace-mode 1)
 (setq whitespace-style '(face trailing spaces empty indentation::space space-before-tab space-before-tab::tab space-mark))
 ;(add-hook 'prog-mode-hook 'whitespace-mode)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
-;; Window Keys
-;; ===========
+;; ido - interactively do
+;; TODO: checkout ido-ubiquitous package
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(ido-mode 1)
 
-;; Move between visible buffers
-(global-set-key (kbd "C-x <up>") 'windmove-up)
-(global-set-key (kbd "C-x <down>") 'windmove-down)
-(global-set-key (kbd "C-x <left>") 'windmove-left)
-(global-set-key (kbd "C-x <right>") 'windmove-right)
-(global-set-key (kbd "M-s-<up>") 'windmove-up)
-(global-set-key (kbd "M-s-<down>") 'windmove-down)
-(global-set-key (kbd "M-s-<left>") 'windmove-left)
-(global-set-key (kbd "M-s-<right>") 'windmove-right)
-(global-set-key (kbd "s-w") 'delete-window)
+;; configure isearch so that it still has keybindings
+(global-set-key (kbd "s-s") 'isearch-forward-regexp)
+(global-set-key (kbd "s-r") 'isearch-backward-regexp)
 
-(global-set-key (kbd "M-s-^") 'windmove-up)   ;; M-s-i
-(global-set-key (kbd "M-s-˚") 'windmove-down) ;; M-s-k
-(global-set-key (kbd "M-s-∆") 'windmove-left) ;; M-s-j
-(global-set-key (kbd "M-s-¬") 'windmove-right);; M-s-l
+;; configure hippie-expand
+(global-set-key (kbd "M-/") 'hippie-expand)
+(setq hippie-expand-try-functions-list
+      '(try-expand-dabbrev
+        try-expand-dabbrev-all-buffers
+        try-expand-dabbrev-from-kill
+        try-complete-lisp-symbol-partially
+        try-complete-list-symbol))
 
-;; s-w will kill current buffer, s-e is close and will try to kill a bunch
-(global-set-key (kbd "s-e") 'kill-some-buffers)
+(defalias 'list-buffers 'ibuffer)
 
-;; Unbind the window minimizing behavior (suspend-frame)
-(global-unset-key (kbd "C-z"))
+;; enable to keep track of window orginization for undo
+(winner-mode -1)
+
+;; use shift and arrow keys to move between buffers
+;; I prefer C-M-S and arrow keys, to work like OS X ShiftIt
+;;(windmove-default-keybindings)
+
+;; To use org-mode to condense a large config file...
+;; In org mode type <s-<Tab> and add a emacs-lisp line, then put list in the
+;; block that gets created.
+;; This is overkill for what I'm up to at the moment...
+;;(org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
 
 ;; Package Setup
 ;; =============
@@ -84,56 +118,116 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-;; Emacs tutorial packages
-;; =======================
-
-(use-package try
-  :ensure t)
-
-(use-package which-key
-  :ensure t
-  :config
-  (which-key-mode))
-
-(use-package org-bullets
-  :ensure t
-  :config
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-
-(use-package ace-window
-  :ensure t
-  :init
-  ;; When lots of windows open, use number keys to nav
-  (global-set-key [remap other-window] 'ace-window)
-  (custom-set-faces
-   '(aw-leading-char-face
-     ((t (:inherit ace-jump-face-foreground :height 2.0))))))
-
-;; ido - interactively do
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(ido-mode 1)
-
-(defalias 'list-buffers 'ibuffer)
-
-;; window management...
-(winner-mode -1)
-;;(windmove-default-keybindings)
-
+;; allow emacs to find programs on $PATH
 (use-package exec-path-from-shell
   :ensure t
   :config
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
 
+;; git integration
+(use-package magit
+  :ensure t
+  :config
+  ;; The following keybinding brings you to a git status window
+  ;; From there s/u can be used to state/unstage
+  ;; l can be used to show log
+  ;; c can be used to commit
+  ;; d can be used to diff
+  ;; h can be used to create branches
+  (global-set-key (kbd "C-x g") 'magit-status))
+
+;; displays a list of emacs commands that have been executed using C-c o
+(use-package command-log-mode
+  :ensure t
+  :config
+  (global-command-log-mode t))
+
+;; show available commands when a prefix is typed
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode))
+
+;; Language Modes
+;; ==============
+
+(use-package clojure-mode
+  :ensure t)
+
+(use-package markdown-mode
+  :ensure t)
+
+;; Flycheck error and linting
+;; ==========================
+(use-package flycheck
+  :ensure t
+  :init
+  (global-flycheck-mode t)
+  ;; Ran `gem install sqlint` to get this exe
+  ;; C-c ! v - Go to menu to enable stuff
+  (setq flycheck-sql-sqlint-executable "/usr/local/bin/sqlint"))
+
+(use-package flycheck-joker
+  :ensure t
+  ;; Adds flycheck support for clojure/clojurescript
+  ;; Ran `brew install candid82/brew/joker` to get this exe
+  )
+
+;; Autocomplete
+;; ============
+(use-package auto-complete
+  :ensure t
+  :init
+  ;; Will do auto-complete based on words already in the buffer
+  ;; M-n and M-p move through auto-complete options
+  ;; C-i and C-m to move through and select
+  (ac-config-default)
+  (global-auto-complete-mode t))
+
+;; Navigation and window/buffer management
+;; =======================================
+
+;; Move between visible buffers
+(global-set-key (kbd "C-x <up>") 'windmove-up)
+(global-set-key (kbd "C-x <down>") 'windmove-down)
+(global-set-key (kbd "C-x <left>") 'windmove-left)
+(global-set-key (kbd "C-x <right>") 'windmove-right)
+(global-set-key (kbd "M-s-<up>") 'windmove-up)
+(global-set-key (kbd "M-s-<down>") 'windmove-down)
+(global-set-key (kbd "M-s-<left>") 'windmove-left)
+(global-set-key (kbd "M-s-<right>") 'windmove-right)
+(global-set-key (kbd "s-w") 'delete-window)
+
+(global-set-key (kbd "M-s-^") 'windmove-up)   ;; M-s-i
+(global-set-key (kbd "M-s-˚") 'windmove-down) ;; M-s-k
+(global-set-key (kbd "M-s-∆") 'windmove-left) ;; M-s-j
+(global-set-key (kbd "M-s-¬") 'windmove-right);; M-s-l
+
+;; s-w will kill current buffer, s-e is close and will try to kill a bunch
+(global-set-key (kbd "s-e") 'kill-some-buffers)
+
+;; When lots of windows open, use number keys to nav
+(use-package ace-window
+  :ensure t
+  :init
+  (global-set-key [remap other-window] 'ace-window)
+  (custom-set-faces
+   '(aw-leading-char-face
+     ((t (:inherit ace-jump-face-foreground :height 2.0)))))
+  (setq aw-dispatch-always t))
+
+;; provide ag (the silver surfer) for fast searches
 (use-package ag
   :ensure t
   ;; Ran `brew install the_silver_searcher` to get this exe
 )
 
+;; swiper short minibuffer keybindings
 (use-package ivy-hydra
   :ensure t)
 
+;; completion functions using ivy
 (use-package counsel
   :ensure t
   ;;counsel-yank-pop is useful to see the kill-ring history
@@ -146,6 +240,7 @@
   ;; It will allow you to specify *.clj* as a raw input, without having to use a completion
   ;; It is normally mapped to C-u C-j, but there was a suggestion that I liked here
   ;; https://github.com/abo-abo/swiper/issues/55
+  ;; ivy mode is also really useful
   (ivy-mode 1)
   (setq ivy-wrap nil)
   (setq ivy-height 10)
@@ -182,23 +277,29 @@
   ;; In a clojure file, `M-s (` is useful to get to the start of a visible form
   :bind ("C-q" . avy-goto-word-1))
 
-(use-package auto-complete
-  :ensure t
-  :init
-  ;; Will do auto-complete based on words already in the buffer
-  ;; M-n and M-p move through auto-complete options
-  ;; C-i and C-m to move through and select
-  (ac-config-default)
-  (global-auto-complete-mode t))
-
-;; To use org-mode to condense a large config file...
-;; In org mode type <s-<Tab> and add a emacs-lisp line, then put list in the
-;; block that gets created.
-;; This is overkill for what I'm up to at the moment...
-;;(org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
-
 ;; Theme Packages
 ;; ==============
+
+(use-package linum
+  :ensure t
+  :config
+  (setq linum-format "%d")
+  (global-linum-mode t))
+
+(use-package hlinum
+  :ensure t
+  :config
+  (hlinum-activate)
+  ;(set-face-background 'linum-highlight-face "#ffb86c")
+  ;(set-face-foreground 'linum-highlight-face "#000")
+)
+
+(use-package paren
+  :ensure t
+  :config
+  (set-face-background 'show-paren-match (face-background 'default))
+  (set-face-foreground 'show-paren-match "#ffb86c")
+  (set-face-attribute 'show-paren-match nil :weight 'extra-bold))
 
 (use-package powerline
   :ensure t)
@@ -218,16 +319,46 @@
   :config
   (load-theme 'monokai t)
   (setq monokai-height-minus-1 0.8
-	  monokai-height-plus-1 1.1
-	  monokai-height-plus-2 1.15
-	  monokai-height-plus-3 1.2
-	  monokai-height-plus-4 1.5))
+        monokai-height-plus-1 1.1
+        monokai-height-plus-2 1.15
+        monokai-height-plus-3 1.2
+        monokai-height-plus-4 1.5))
 
 (defun what-face (pos)
   (interactive "d")
   (let ((face (or (get-char-property (point) 'read-face-name)
                   (get-char-property (point) 'face))))
     (if face (message "Face: %s" face) (message "No face at %d" pos))))
+
+(use-package rainbow-mode
+  :ensure t
+  ;; css colors display inline
+  )
+
+(use-package org-bullets
+  :ensure t
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+(use-package speedbar
+  :ensure t)
+
+(use-package sr-speedbar
+  :ensure t
+  :config
+  (setq speedbar-show-unknown-files t)
+  (setq speedbar-use-images nil)
+  (setq sr-speedbar-right-side nil)
+  (global-set-key (kbd "C-c n") 'sr-speedbar-toggle))
+
+(use-package beacon
+  :ensure t
+  :config
+  (beacon-mode 1)
+  ;(setq beacon-color "#FF0000")
+  )
+
+(moe-theme-set-color 'cyan)
 
 ;; Editor Packages
 ;; ===============
@@ -238,6 +369,7 @@
   (setq smex-save-file (concat user-emacs-directory ".smex-items"))
   (smex-initialize)
   ;; Useful for completions, used to be what I used for M-x
+  ;; C-s to move right, C-r to move left in list
   (global-set-key (kbd "M-z") 'smex))
 
 (use-package recentf
@@ -263,26 +395,23 @@
                                                  "backups"))))
   (setq auto-save-default  nil))
 
-(global-set-key (kbd "M-/") 'hippie-expand)
-(setq hippie-expand-try-functions-list
-      '(try-expand-dabbrev
-        try-expand-dabbrev-all-buffers
-        try-expand-dabbrev-from-kill
-        try-complete-lisp-symbol-partially
-        try-complete-list-symbol))
-
-(use-package speedbar
-  :ensure t)
-
-(use-package sr-speedbar
+;; on delete, remove all whitespace
+(use-package hungry-delete
   :ensure t
   :config
-  (setq speedbar-show-unknown-files t)
-  (setq speedbar-use-images nil)
-  (setq sr-speedbar-right-side nil)
-  (global-set-key (kbd "C-c n") 'sr-speedbar-toggle))
+  (global-hungry-delete-mode 1)
+  ;(setq beacon-color "#FF0000")
+  )
 
-;; TODO: checkout ido-ubiquitous package
+;; allow ability to expand current text selection
+(use-package expand-region
+  :ensure t
+  :config
+  ;; This finally provides a nice way to select and entire s-expr!
+  ;; If you are at the starting paren, C-= will select up to the
+  ;; matching closing paren. This makes quick C-w for yanking an
+  ;; s-expr to move it, tasty!
+  (global-set-key (kbd "C-=") 'er/expand-region))
 
 ;; Clojure Packages
 ;; ================
@@ -300,49 +429,8 @@
   :config
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 
-(use-package clojure-mode
-  :ensure t)
-
 (use-package cider
   :ensure t)
-
-(use-package magit
-  :ensure t
-  :config
-  ;; The following keybinding brings you to a git status window
-  ;; From there s/u can be used to state/unstage
-  ;; l can be used to show log
-  ;; c can be used to commit
-  ;; d can be used to diff
-  ;; h can be used to create branches
-  (global-set-key (kbd "C-x g") 'magit-status))
-
-(use-package rainbow-mode
-  :ensure t
-  ;; css colors display inline
-  )
-
-(use-package markdown-mode
-  :ensure t)
-
-(moe-theme-set-color 'cyan)
-
-;; Experimental
-;; ============
-
-(use-package flycheck
-  :ensure t
-  :init
-  (global-flycheck-mode t)
-  ;; Ran `gem install sqlint` to get this exe
-  ;; C-c ! v - Go to menu to enable stuff
-  (setq flycheck-sql-sqlint-executable "/usr/local/bin/sqlint"))
-
-(use-package flycheck-joker
-  :ensure t
-  ;; Adds flycheck support for clojure/clojurescript
-  ;; Ran `brew install candid82/brew/joker` to get this exe
-  )
 
 (use-package clojure-snippets
   :ensure t
@@ -351,6 +439,9 @@
   (define-key yas-minor-mode-map (kbd "<tab>") nil)
   (define-key yas-minor-mode-map (kbd "TAB") nil)
   (define-key yas-minor-mode-map (kbd "<C-tab>") 'yas-expand))
+
+;; Experimental
+;; ============
 
 ;; Found on sacha chua's blog, more useful to me than normal C-a
 (defun sacha/smarter-move-beginning-of-line (arg)
@@ -380,36 +471,9 @@ point reaches the beginning or end of the buffer, stop there."
 (global-set-key [remap move-beginning-of-line]
                 'sacha/smarter-move-beginning-of-line)
 
-(use-package beacon
-  :ensure t
-  :config
-  (beacon-mode 1)
-  ;(setq beacon-color "#FF0000")
-  )
-
-(use-package hungry-delete
-  :ensure t
-  :config
-  (global-hungry-delete-mode 1)
-  ;(setq beacon-color "#FF0000")
-  )
-
-(use-package expand-region
-  :ensure t
-  :config
-  ;; This finally provides a nice way to select and entire s-expr!
-  ;; If you are at the starting paren, C-= will select up to the
-  ;; matching closing paren. This makes quick C-w for yanking an
-  ;; s-expr to move it, tasty!
-  (global-set-key (kbd "C-=") 'er/expand-region))
-
-(use-package command-log-mode
-  :ensure t
-  :config
-  (global-command-log-mode t))
-
-(global-set-key (kbd "s-s") 'isearch-forward-regexp)
-(global-set-key (kbd "s-r") 'isearch-backward-regexp)
+;; try out new packages without having to install them
+(use-package try
+  :ensure t)
 
 (provide 'init)
 ;;; init.el ends here
