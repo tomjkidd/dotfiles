@@ -141,7 +141,11 @@
 (use-package command-log-mode
   :ensure t
   :config
-  (global-command-log-mode t))
+  (global-command-log-mode t)
+  ;; NOTE: uncomment the following line to log even trivial commands
+  ;; This is useful for pairing and showing everything that happens
+  ;;(setq clm/log-command-exceptions* '(nil))
+  )
 
 ;; show available commands when a prefix is typed
 (use-package which-key
@@ -183,7 +187,14 @@
   ;; M-n and M-p move through auto-complete options
   ;; C-i and C-m to move through and select
   (ac-config-default)
-  (global-auto-complete-mode t))
+  (global-auto-complete-mode t)
+
+  ;; The following allows ivy-like bindings
+  ;; C-n -> 'ac-next
+  ;; C-p -> 'ac-previous
+  ;; C-j -> 'ac-complete
+  (setq ac-use-menu-map t)
+  (define-key ac-menu-map (kbd "C-j") 'ac-complete))
 
 ;; Navigation and window/buffer management
 ;; =======================================
