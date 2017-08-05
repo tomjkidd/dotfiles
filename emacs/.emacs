@@ -379,6 +379,26 @@
   ;(setq beacon-color "#FF0000")
   )
 
+;; use icons for file types
+(use-package all-the-icons
+  :ensure t
+  ;; Ran M-x all-the-icons-install-fonts to install font cache locally
+  )
+
+;; use icons for counsel-find-file
+(use-package all-the-icons-ivy
+  :ensure t
+  :config
+  ;; The formatter uses a tab, which by default doesn't look good...
+  (setq-default tab-width 2)
+  (all-the-icons-ivy-setup))
+
+;; use icons for dired buffer
+(use-package all-the-icons-dired
+  :ensure t
+  :config
+  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
+
 ;; ensure the mode-line moe-theme
 (moe-theme-set-color 'cyan)
 
