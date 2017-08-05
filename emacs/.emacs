@@ -90,7 +90,7 @@
 (winner-mode -1)
 
 ;; use shift and arrow keys to move between buffers
-;; I prefer C-M-S and arrow keys, to work like OS X ShiftIt
+;; I prefer M-s and arrow keys, to work like Chrome tabs
 ;;(windmove-default-keybindings)
 
 ;; To use org-mode to condense a large config file...
@@ -207,7 +207,7 @@
 ;; s-w will kill current buffer, s-e is close and will try to kill a bunch
 (global-set-key (kbd "s-e") 'kill-some-buffers)
 
-;; When lots of windows open, use number keys to nav
+;; buffer navigation - use number keys to nav
 (use-package ace-window
   :ensure t
   :init
@@ -223,7 +223,7 @@
   ;; Ran `brew install the_silver_searcher` to get this exe
 )
 
-;; swiper short minibuffer keybindings
+;; swiper minibuffer short modal keybindings
 (use-package ivy-hydra
   :ensure t)
 
@@ -233,6 +233,7 @@
   ;;counsel-yank-pop is useful to see the kill-ring history
   )
 
+;; allows many search contexts through a consistent minibuffer
 (use-package swiper
   :ensure t
   :config
@@ -270,22 +271,25 @@
 (use-package projectile
   :disabled)
 
+;; search and isolate chars/words in window with a character-based decision tree
 (use-package avy
   :ensure t
   ;; avy-goto-char maps every occurence of a typed char to a series of keys.
+  ;; avy-goto-word maps every occurence of a typed word that starts with the key typed.
   ;; Typing the matching series will nav to a specific area in the visible buffer.
   ;; In a clojure file, `M-s (` is useful to get to the start of a visible form
   :bind ("C-q" . avy-goto-word-1))
 
 ;; Theme Packages
 ;; ==============
-
+;; highlights the current line
 (use-package linum
   :ensure t
   :config
   (setq linum-format "%d")
   (global-linum-mode t))
 
+;; highlights the line number of the current line
 (use-package hlinum
   :ensure t
   :config
@@ -294,6 +298,7 @@
   ;(set-face-foreground 'linum-highlight-face "#000")
 )
 
+;; highlights matching parens
 (use-package paren
   :ensure t
   :config
@@ -301,9 +306,11 @@
   (set-face-foreground 'show-paren-match "#ffb86c")
   (set-face-attribute 'show-paren-match nil :weight 'extra-bold))
 
+;; mode-line customization
 (use-package powerline
   :ensure t)
 
+;; mode-line color theme
 (use-package moe-theme
   :ensure t
   :config
@@ -314,6 +321,7 @@
   ;(set-face-attribute 'powerline-inactive2 nil :background "#4e4e4e" :foreground "#4e4e4e")
   (powerline-moe-theme))
 
+;; main editor color theme
 (use-package monokai-theme
   :ensure t
   :config
@@ -324,16 +332,16 @@
         monokai-height-plus-3 1.2
         monokai-height-plus-4 1.5))
 
+;; ability to figure out the face at cursor
 (defun what-face (pos)
   (interactive "d")
   (let ((face (or (get-char-property (point) 'read-face-name)
                   (get-char-property (point) 'face))))
     (if face (message "Face: %s" face) (message "No face at %d" pos))))
 
+;; display css colors inline
 (use-package rainbow-mode
-  :ensure t
-  ;; css colors display inline
-  )
+  :ensure t)
 
 (use-package org-bullets
   :ensure t
@@ -343,6 +351,7 @@
 (use-package speedbar
   :ensure t)
 
+;; familiar tree-based file navigation
 (use-package sr-speedbar
   :ensure t
   :config
@@ -351,6 +360,7 @@
   (setq sr-speedbar-right-side nil)
   (global-set-key (kbd "C-c n") 'sr-speedbar-toggle))
 
+;; cursor position animation to make it clear where it is
 (use-package beacon
   :ensure t
   :config
@@ -358,6 +368,7 @@
   ;(setq beacon-color "#FF0000")
   )
 
+;; ensure the mode-line moe-theme
 (moe-theme-set-color 'cyan)
 
 ;; Editor Packages
@@ -416,6 +427,7 @@
 ;; Clojure Packages
 ;; ================
 
+;; efficient lisp editing
 (use-package paredit
   :ensure t
   :config
@@ -424,6 +436,7 @@
   (add-hook 'clojure-mode-hook #'paredit-mode)
   (add-hook 'cider-repl-mode-hook #'paredit-mode))
 
+;; match nested parens with matching colors
 (use-package rainbow-delimiters
   :ensure t
   :config
