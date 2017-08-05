@@ -37,6 +37,7 @@ alias gshow2='git diff HEAD^ HEAD' # Note, COMMIT^ COMMIT can be used for any co
 # DELETE all merged git branches 'git branch --merged | egrep -v "(^\*|master|develop)" | xargs git branch -d'
 alias gbD='git branch --merged | egrep -v "(master|develop)" | xargs git branch -d'
 alias et='emacsclient -t'
+alias emacs='emacsclient -c'
 
 alias reloadprof='source ~/.bash_profile'
 
@@ -55,7 +56,9 @@ alias clj-repl='rlwrap java -jar ~/.m2/repository/org/clojure/clojure/1.8.0/cloj
 alias clj-server-repl='java -cp ~/.m2/repository/org/clojure/clojure/1.8.0/clojure-1.8.0.jar -Dclojure.server.repl="{:port 5555 :accept clojure.core.server/repl}" clojure.main'
 
 # Git Completions
-source /usr/local/etc/bash_completion.d/git-completion.bash
+if [ -f /usr/local/etc/bash_completion.d/git-completion.bash ]; then
+    source /usr/local/etc/bash_completion.d/git-completion.bash
+fi
 
 # Secrets : Stuff I don't want to put in github...
 if [ -f ~/.bash_secrets ]; then

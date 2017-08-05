@@ -1,4 +1,4 @@
-;;; init.el --- My cobbled together emacs config
+;;; .emacs --- My cobbled together emacs config
 
 ;;; Commentary:
 

@@ -1,0 +1,59 @@
+* Motivation
+
+I really liked how the videos at [[http://cestlaz.github.io/stories/emacs/][cestlaz]] were short and focused on the practical use of the packages that were being shared.
+This file is meant to share in that spirit, and capture specific value I get from certain packages.
+
+* command-log-mode
+
+command-log-mode is useful for pairing or showing off what you're doing in emacs in a way that is friendly for others to watch.
+
+| Command name                  | Command keys | Description                                           |
+|-------------------------------+--------------+-------------------------------------------------------|
+| clm/toggle-command-log-buffer | C-c o        | Toggles the command-log-buffer to show typed commands |
+|                               |              |                                                       |
+
+The toggle opens up a menu on the right hand side of the screen, which captures each command you perform as a list.
+This is superior to the keyboard capturing programs in that the list remains, and automatically scrolls, so you don't have to catch fleeting glimpses.
+
+* avy
+
+avy allows navigation across all visible buffers in the window using a character based decision tree.
+
+| Command name    | Command keys | Description                                                                                  |
+|-----------------+--------------+----------------------------------------------------------------------------------------------|
+| ayv-goto-word-1 | C-q          | Type a single character and the window is given multi-key shortcuts to nav to any occurence. |
+
+This is really useful for jumping to a particular place in any of the visible buffers,
+so when you have a lot of related code open together, you can easily jump to exact locations.
+
+* swiper
+
+swiper is a really neat package, centered around performing searches.
+It uses a search result buffer called the `minibuffer`, which docks at the bottom of the emacs window.
+
+The following commands are used to make searches easier to deal with.
+
+| Command name      | Command keys | Description                                                                  |
+|-------------------+--------------+------------------------------------------------------------------------------|
+| counsel-M-x       | M-x          | Brings up a minibuffer of known commands, and also their key bindings        |
+| swiper            | C-s          | Brings up a minibuffer that allows you to search the current file            |
+| counsel-git       | C-c g        | Brings up a minibuffer that allows you to search a git repo by file name     |
+| counsel-git-grep  | C-c j        | Brings up a minibuffer that allows you to search a git repo by file contents |
+| ivy-switch-buffer | C-x b        | Brings up a minibuffer that allows you to search the list of buffers by name |
+| ivy-resume        | <f6>         | Brings up the most recent minibuffer, retaining the context when possible    |
+
+The real power comes from using the minibuffer to consistently navigate results in each of the different search contexts.
+
+| Command name           | Command keys | Description                                                            |
+|------------------------+--------------+------------------------------------------------------------------------|
+| ivy-next-line          | C-n          | Moves down in the minibuffer                                           |
+| ivy-prev-line          | C-p          | Moves up in the minibuffer                                             |
+| ivy-done               | C-m          | Select an item in the minibuffer and nav to it, closing the minibuffer |
+| ivy-alt-done           | C-j          | Select an item in the minibuffer and nav to it, closing the minibuffer |
+| ivy-next-line-and-call | C-M-n        | Moves down in the minibuffer, and displays item in a buffer            |
+| ivy-prev-line-and-call | C-M-p        | Moves up in the minibuffer, and displays item in a buffer              |
+
+Using `counsel-git-grep` with `ivy-next-line-and-call` enables the workflow I used to approach through the `rgrep` command.
+It is better because you don't have to click to manage navigation between views of the results.
+
+Once you have left a minibuffer search, `ivy-resume` makes it really nice to keep track of where you left off in the list of matches.
