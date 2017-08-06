@@ -14,6 +14,21 @@ avy allows navigation across all visible buffers in the window using a character
 This is really useful for jumping to a particular place in any of the visible buffers,
 so when you have a lot of related code open together, you can easily jump to exact locations.
 
+* cider
+
+cider allows integration with clojure/clojurescript projects.
+
+| Command name   | Command keys | Description                                                 |
+|----------------+--------------+-------------------------------------------------------------|
+| cider-jack-in  | C-c M-j      |                                                             |
+|                | C-u C-M-x    | Cider Debug, this will 'instrument the top-level-expression |
+|                |              | Optionally, insert #break in code to create breakpoints     |
+|                |              | Use C-c C-e or the repl to evaluate                         |
+|                |              | n: next c: continue i: step-in o: step-out q: quit          |
+|                |              | Use C-M-x to stop debugging the marked expression           |
+| cider-find-var | M-.          | Attempt to locate symbol under point                        |
+| cider-pop-back | M-,          | Go back to where previous M-. was called from               |
+
 * command-log-mode
 
 command-log-mode is useful for pairing or showing off what you're doing in emacs in a way that is friendly for others to watch.
@@ -25,6 +40,17 @@ command-log-mode is useful for pairing or showing off what you're doing in emacs
 
 The toggle opens up a menu on the right hand side of the screen, which captures each command you perform as a list.
 This is superior to the keyboard capturing programs in that the list remains, and automatically scrolls, so you don't have to catch fleeting glimpses.
+
+* expand-region
+
+Expand region allows you take a starting selection, something even as simple as where the point currently is, and keep zooming out to select a larger and larger region.
+
+| Command name     | Command keys | Description                                |
+|------------------+--------------+--------------------------------------------|
+| er/expand-region | C-=          | Increase selected region by semantic units |
+
+The main value I get from this package is workflows for refactoring clojure code. I can use extend-region to expand until have an entire nested expression selected, and then a simple C-w will yank that form out of the current context.
+I can then easily move it into a new location.
 
 * swiper
 
@@ -57,3 +83,18 @@ Using `counsel-git-grep` with `ivy-next-line-and-call` enables the workflow I us
 It is better because you don't have to click to manage navigation between views of the results.
 
 Once you have left a minibuffer search, `ivy-resume` makes it really nice to keep track of where you left off in the list of matches.
+
+* Useful Commands
+
+Here I list some other commands I have found useful in my travels
+
+| Command name       | Command keys   | Description                                           |
+|--------------------+----------------+-------------------------------------------------------|
+| beginning-of-defun | C-M-a          | Move to beginning of closest function definition      |
+| end-of-defun       | C-M-e          | Move to end of closest function definition            |
+| next-error         | C-x ` or M-g n | Move to next (flycheck) error                         |
+| previous error     | M-g p          | Move to previous (flycheck) error                     |
+| eval-last-sexp     | C-x C-e        | Evaluate last s-expression                            |
+| backward-kill-word | C-DEL          | Kill a word behind the point                          |
+| mark-whole-buffer  | C-x h          | Select all text in current buffer                     |
+| describe-mode      | C-h m          | Show mode and keybinding information for current mode |
