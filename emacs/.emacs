@@ -166,7 +166,10 @@
 ;; ==============
 
 (use-package clojure-mode
-  :ensure t)
+  :ensure t
+  :config
+  ;; select region and hit tab to do clojure-align
+  (setq clojure-align-forms-automatically t))
 
 (use-package markdown-mode
   :ensure t)
@@ -477,10 +480,7 @@
   (add-hook 'lisp-mode-hook #'paredit-mode)
   (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
   (add-hook 'clojure-mode-hook #'paredit-mode)
-  (add-hook 'cider-repl-mode-hook #'paredit-mode)
-
-  ;; select region and hit tab to do clojure-align
-  (setq clojure-align-forms-automatically t))
+  (add-hook 'cider-repl-mode-hook #'paredit-mode))
 
 ;; match nested parens with matching colors
 (use-package rainbow-delimiters
