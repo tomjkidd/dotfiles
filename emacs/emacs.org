@@ -3,6 +3,9 @@
 I really liked how the videos at [[http://cestlaz.github.io/stories/emacs/][cestlaz]] were short and focused on the practical use of the packages that were being shared.
 This file is meant to share in that spirit, and capture specific value I get from certain packages.
 
+It is worth noting that in any buffer using these modes, you can use `C-h m` to see the keybindings.
+So if you find any of the packages here useful, you can explore other useful features that aren't covered.
+
 * avy
 
 avy allows navigation across all visible buffers in the window using a character based decision tree.
@@ -18,16 +21,18 @@ so when you have a lot of related code open together, you can easily jump to exa
 
 cider allows integration with clojure/clojurescript projects.
 
-| Command name   | Command keys | Description                                                 |
-|----------------+--------------+-------------------------------------------------------------|
-| cider-jack-in  | C-c M-j      |                                                             |
-|                | C-u C-M-x    | Cider Debug, this will 'instrument the top-level-expression |
-|                |              | Optionally, insert #break in code to create breakpoints     |
-|                |              | Use C-c C-e or the repl to evaluate                         |
-|                |              | n: next c: continue i: step-in o: step-out q: quit          |
-|                |              | Use C-M-x to stop debugging the marked expression           |
-| cider-find-var | M-.          | Attempt to locate symbol under point                        |
-| cider-pop-back | M-,          | Go back to where previous M-. was called from               |
+| Command name      | Command keys | Description                                                 |
+|-------------------+--------------+-------------------------------------------------------------|
+| cider-jack-in     | C-c M-j      |                                                             |
+|                   | C-u C-M-x    | Cider Debug, this will 'instrument the top-level-expression |
+|                   |              | Optionally, insert #break in code to create breakpoints     |
+|                   |              | Use C-c C-e or the repl to evaluate                         |
+|                   |              | n: next c: continue i: step-in o: step-out q: quit          |
+|                   |              | Use C-M-x to stop debugging the marked expression           |
+| cider-load-buffer | C-c C-k      | Load the current buffer to make it's definitions available  |
+| cider-find-var    | M-.          | Attempt to locate symbol under point                        |
+| cider-pop-back    | M-,          | Go back to where previous M-. was called from               |
+| cider-quit        | C-c C-q      | Quit cider, stop nrepl                                      |
 
 * command-log-mode
 

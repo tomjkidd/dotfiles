@@ -127,8 +127,6 @@
 ;; This is overkill for what I'm up to at the moment...
 ;;(org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
 
-
-
 ;; allow emacs to find programs on $PATH
 (use-package exec-path-from-shell
   :ensure t
@@ -451,9 +449,7 @@
 (use-package hungry-delete
   :ensure t
   :config
-  (global-hungry-delete-mode 1)
-  ;(setq beacon-color "#FF0000")
-  )
+  (global-hungry-delete-mode 1))
 
 ;; allow ability to expand current text selection
 (use-package expand-region
@@ -465,6 +461,12 @@
   ;; s-expr to move it, tasty!
   (global-set-key (kbd "C-=") 'er/expand-region))
 
+;; automatic re-indentation when code organization changes
+(use-package aggressive-indent
+  :ensure t
+  :config
+  (global-aggressive-indent-mode t))
+
 ;; Clojure Packages
 ;; ================
 
@@ -475,7 +477,10 @@
   (add-hook 'lisp-mode-hook #'paredit-mode)
   (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
   (add-hook 'clojure-mode-hook #'paredit-mode)
-  (add-hook 'cider-repl-mode-hook #'paredit-mode))
+  (add-hook 'cider-repl-mode-hook #'paredit-mode)
+
+  ;; select region and hit tab to do clojure-align
+  (setq clojure-align-forms-automatically t))
 
 ;; match nested parens with matching colors
 (use-package rainbow-delimiters
