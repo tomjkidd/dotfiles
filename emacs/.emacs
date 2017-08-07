@@ -211,6 +211,7 @@
 (use-package company
   :ensure t
   :config
+  (setq company-show-numbers t)
   (global-company-mode t)
 
   ;; The following allows ivy-like bindings
@@ -586,6 +587,8 @@ point reaches the beginning or end of the buffer, stop there."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(company-quickhelp-color-background "blue violet")
+ '(company-quickhelp-color-foreground "thistle1")
  '(package-selected-packages
    (quote
     (ag flycheck-joker markdown-mode clojure-snippets flycheck rainbow-mode magit cider clojure-mode rainbow-delimiters paredit sr-speedbar smex monokai-theme moe-theme powerline auto-complete counsel ivy-hydra ace-window org-bullets which-key try use-package))))

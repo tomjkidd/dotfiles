@@ -46,6 +46,18 @@ command-log-mode is useful for pairing or showing off what you're doing in emacs
 The toggle opens up a menu on the right hand side of the screen, which captures each command you perform as a list.
 This is superior to the keyboard capturing programs in that the list remains, and automatically scrolls, so you don't have to catch fleeting glimpses.
 
+* company
+
+company - complete anything
+Originally I had used the auto-complete package, but as I made progress configuring cider for clojure development, the docs mentioned that company was the prefered auto-complete.
+
+| Command name            | Command keys | Description                                                                                       |
+|-------------------------+--------------+---------------------------------------------------------------------------------------------------|
+| company-show-doc-buffer | C-h          | Shows documentation for the currently selected item in the autocomplete tooltip                   |
+| company-complete-number | M-<number>   | When `(company-show-numbers t), 1 - 0 show up next to options, and M-<number> selects one of them |
+
+I also used define-key with company-active-map to give me ivy-like bindings (C-n, C-p, C-j) to move through the menu options.
+Also neat to note that when working with emacs-lisp, documentation shows up in the bottom margin.
 * expand-region
 
 Expand region allows you take a starting selection, something even as simple as where the point currently is, and keep zooming out to select a larger and larger region.
