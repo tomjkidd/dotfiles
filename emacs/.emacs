@@ -192,21 +192,35 @@
 
 ;; Autocomplete
 ;; ============
-(use-package auto-complete
+;; (use-package auto-complete
+;;   :ensure t
+;;   :init
+;;   ;; Will do auto-complete based on words already in the buffer
+;;   ;; M-n and M-p move through auto-complete options
+;;   ;; C-i and C-m to move through and select
+;;   (ac-config-default)
+;;   (global-auto-complete-mode 0)
+
+;;   ;; The following allows ivy-like bindings
+;;   ;; C-n -> 'ac-next
+;;   ;; C-p -> 'ac-previous
+;;   ;; C-j -> 'ac-complete
+;;   (setq ac-use-menu-map t)
+;;   (define-key ac-menu-map (kbd "C-j") 'ac-complete))
+
+(use-package company
   :ensure t
-  :init
-  ;; Will do auto-complete based on words already in the buffer
-  ;; M-n and M-p move through auto-complete options
-  ;; C-i and C-m to move through and select
-  (ac-config-default)
-  (global-auto-complete-mode t)
+  :config
+  (global-company-mode t)
 
   ;; The following allows ivy-like bindings
-  ;; C-n -> 'ac-next
-  ;; C-p -> 'ac-previous
-  ;; C-j -> 'ac-complete
-  (setq ac-use-menu-map t)
-  (define-key ac-menu-map (kbd "C-j") 'ac-complete))
+  ;; C-n -> go to next
+  ;; C-p -> go to previous
+  ;; C-j -> select current
+  (with-eval-after-load 'company
+    (define-key company-active-map (kbd "C-n") #'company-select-next)
+    (define-key company-active-map (kbd "C-p") #'company-select-previous)
+    (define-key company-active-map (kbd "C-j") #'company-complete-selection)))
 
 ;; Navigation and window/buffer management
 ;; =======================================
@@ -468,7 +482,10 @@
 (use-package aggressive-indent
   :ensure t
   :config
-  (global-aggressive-indent-mode t))
+  ;; Uncomment this to use everywhere.
+  ;; I choose not to because not all code I interact with isn't consistently formatted.
+  ;;(global-aggressive-indent-mode t)
+  )
 
 ;; Clojure Packages
 ;; ================
@@ -489,19 +506,22 @@
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 
 (use-package cider
-  :ensure t)
-
-;; TODO: lookup company mode, seems to be that is the current supported auto-complete
-(use-package ac-cider
   :ensure t
   :config
-  (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
-  (add-hook 'cider-mode-hook 'ac-cider-setup)
-  (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
-  (eval-after-load "auto-complete"
-    '(progn
-       (add-to-list 'ac-modes 'cider-mode)
-       (add-to-list 'ac-modes 'cider-repl-mode))))
+  (with-eval-after-load 'cider
+    (define-key cider-mode-map (kbd "C-c d") #'cider-doc)))
+
+;; TODO: lookup company mode, seems to be that is the current supported auto-complete
+;; (use-package ac-cider
+;;   :ensure t
+;;   :config
+;;   (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
+;;   (add-hook 'cider-mode-hook 'ac-cider-setup)
+;;   (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
+;;   (eval-after-load "auto-complete"
+;;     '(progn
+;;        (add-to-list 'ac-modes 'cider-mode)
+;;        (add-to-list 'ac-modes 'cider-repl-mode))))
 
 (use-package clojure-snippets
   :ensure t
@@ -541,6 +561,14 @@ point reaches the beginning or end of the buffer, stop there."
 ;; remap C-a to `smarter-move-beginning-of-line'
 (global-set-key [remap move-beginning-of-line]
                 'sacha/smarter-move-beginning-of-line)
+
+;; a function to quickly insert the current timestamp
+(defun insert-timestamp ()
+  (interactive)
+  (insert (format-time-string "%Y/%m/%d %X")))
+
+;; insert timestamp into the current buffer
+(global-set-key (kbd "C-c i t") 'insert-timestamp)
 
 ;; try out new packages without having to install them
 (use-package try
