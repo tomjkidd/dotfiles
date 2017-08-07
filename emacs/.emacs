@@ -222,6 +222,9 @@
     (define-key company-active-map (kbd "C-p") #'company-select-previous)
     (define-key company-active-map (kbd "C-j") #'company-complete-selection)))
 
+(use-package company-quickhelp
+  :ensure t)
+
 ;; Navigation and window/buffer management
 ;; =======================================
 
@@ -483,7 +486,7 @@
   :ensure t
   :config
   ;; Uncomment this to use everywhere.
-  ;; I choose not to because not all code I interact with isn't consistently formatted.
+  ;; I choose not to because not all code I interact with is consistently formatted.
   ;;(global-aggressive-indent-mode t)
   )
 
@@ -508,6 +511,8 @@
 (use-package cider
   :ensure t
   :config
+  (setq cider-prompt-for-symbol nil)
+  (add-hook 'cider-mode-hook #'eldoc-mode)
   (with-eval-after-load 'cider
     (define-key cider-mode-map (kbd "C-c d") #'cider-doc)))
 
