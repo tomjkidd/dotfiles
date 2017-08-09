@@ -403,6 +403,7 @@
 
 ;; cursor position animation to make it clear where it is
 (use-package beacon
+  :diminish beacon-mode
   :ensure t
   :config
   (beacon-mode 1)
@@ -490,6 +491,7 @@
 
 ;; on delete, remove all whitespace
 (use-package hungry-delete
+  :diminish hungry-delete-mode
   :ensure t
   :config
   (global-hungry-delete-mode 1))
@@ -598,6 +600,20 @@ point reaches the beginning or end of the buffer, stop there."
 ;; insert timestamp into the current buffer
 (global-set-key (kbd "C-c i t") 'insert-timestamp)
 
+;; use M-. and M-, for nav to elisp definitions
+(use-package elisp-slime-nav
+  :ensure t)
+
+;; use C-. and M-, for nav to clojure definitions (without cider)
+;; dumb-jump is intentionally lightweight and imprecise, which is
+;; usually fine for browsing code in a single repo.
+(use-package dumb-jump
+  :ensure t
+  :config
+  (setq dumb-jump-selector 'ivy)
+  (global-set-key (kbd "C-.") 'dumb-jump-go)
+  (global-set-key (kbd "C-,") 'dumb-jump-back))
+
 ;; try out new packages without having to install them
 (use-package try
   :ensure t)
@@ -613,7 +629,7 @@ point reaches the beginning or end of the buffer, stop there."
  '(company-quickhelp-color-foreground "thistle1")
  '(package-selected-packages
    (quote
-    (ag flycheck-joker markdown-mode clojure-snippets flycheck rainbow-mode magit cider clojure-mode rainbow-delimiters paredit sr-speedbar smex monokai-theme moe-theme powerline auto-complete counsel ivy-hydra ace-window org-bullets which-key try use-package))))
+    (dumb-jump elisp-slime-nav ag flycheck-joker markdown-mode clojure-snippets flycheck rainbow-mode magit cider clojure-mode rainbow-delimiters paredit sr-speedbar smex monokai-theme moe-theme powerline auto-complete counsel ivy-hydra ace-window org-bullets which-key try use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
