@@ -409,19 +409,25 @@
   ;(setq beacon-color "#FF0000")
   )
 
-(defun personal-ivy-dir-transformer (dirname)
-  "Return a candidate string for filename DIRNAME preceded by the folder icon."
+(defun personal-filename->icon (filename)
+  "Return an icon based on a file or dir FILENAME.  Defaults to `all-the-icons-icon-for-file` after checking for a couple known cases that aren't quite what I want."
+  (cond ((string-match ".emacs$" filename) (all-the-icons-fileicon "emacs" :height 1.0 :v-adjust -0.2 :face 'all-the-icons-purple))
+        ((string-match ".git" filename) (all-the-icons-alltheicon "git" :height 1.0 :face 'all-the-icons-lred))
+        ((string-match "/$" filename) (all-the-icons-faicon "folder" :height .85 :face 'all-the-icons-blue))
+        (t (all-the-icons-icon-for-file filename))))
+
+(defun personal-format-with-icon (icon s)
+  "Return a candidate string with ICON followed by S."
   (format "%s %s"
-          (propertize " " 'display (all-the-icons-faicon "folder" :height 1.1 :face 'all-the-icons-blue))
-          dirname))
+          (propertize " " 'display icon)
+          s))
 
 ;; Due to font-cache problems, I am using this modification to ensure
 ;; counsel-find-file behaves the way I want.
 (defun personal-all-the-icons-ivy-transformer (filename)
   "Create the \"find-file\" entry using FILENAME to choose an icon."
-  (if (string-match "/$" filename)
-      (personal-ivy-dir-transformer filename)
-      (all-the-icons-ivy-file-transformer filename)))
+  (let ((icon (personal-filename->icon filename)))
+    (personal-format-with-icon icon filename)))
 
 ;; use icons for file types
 (use-package all-the-icons
