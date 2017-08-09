@@ -274,6 +274,7 @@
   )
 
 ;; allows many search contexts through a consistent minibuffer
+;; TODO: Check on https://github.com/yevgnen/ivy-rich
 (use-package swiper
   :ensure t
   :config
@@ -408,6 +409,20 @@
   ;(setq beacon-color "#FF0000")
   )
 
+(defun personal-ivy-dir-transformer (dirname)
+  "Return a candidate string for filename DIRNAME preceded by the folder icon."
+  (format "%s %s"
+          (propertize " " 'display (all-the-icons-faicon "folder" :height 1.1 :face 'all-the-icons-blue))
+          dirname))
+
+;; Due to font-cache problems, I am using this modification to ensure
+;; counsel-find-file behaves the way I want.
+(defun personal-all-the-icons-ivy-transformer (filename)
+  "Create the \"find-file\" entry using FILENAME to choose an icon."
+  (if (string-match "/$" filename)
+      (personal-ivy-dir-transformer filename)
+      (all-the-icons-ivy-file-transformer filename)))
+
 ;; use icons for file types
 (use-package all-the-icons
   :ensure t
@@ -420,7 +435,8 @@
   :config
   ;; The formatter uses a tab, which by default doesn't look good...
   (setq-default tab-width 2)
-  (all-the-icons-ivy-setup))
+  (all-the-icons-ivy-setup)
+  (ivy-set-display-transformer 'counsel-find-file 'personal-all-the-icons-ivy-transformer))
 
 ;; use icons for dired buffer
 (use-package all-the-icons-dired
