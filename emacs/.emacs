@@ -413,7 +413,7 @@
 (defun personal-filename->icon (filename)
   "Return an icon based on a file or dir FILENAME.  Defaults to `all-the-icons-icon-for-file` after checking for a couple known cases that aren't quite what I want."
   (cond ((string-match ".emacs$" filename) (all-the-icons-fileicon "emacs" :height 1.0 :v-adjust -0.2 :face 'all-the-icons-purple))
-        ((string-match ".git" filename) (all-the-icons-alltheicon "git" :height 1.0 :face 'all-the-icons-lred))
+        ((string-match ".git/" filename) (all-the-icons-alltheicon "git" :height 1.0 :face 'all-the-icons-lred))
         ((string-match "/$" filename) (all-the-icons-faicon "folder" :height .85 :face 'all-the-icons-blue))
         (t (all-the-icons-icon-for-file filename))))
 
@@ -604,7 +604,7 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package elisp-slime-nav
   :ensure t)
 
-;; use C-. and M-, for nav to clojure definitions (without cider)
+;; use C-. and C-, for nav to clojure definitions (without cider)
 ;; dumb-jump is intentionally lightweight and imprecise, which is
 ;; usually fine for browsing code in a single repo.
 (use-package dumb-jump
