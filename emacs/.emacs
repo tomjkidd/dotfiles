@@ -174,6 +174,12 @@
 (use-package markdown-mode
   :ensure t)
 
+(use-package web-mode
+  :ensure t
+  :diminish web-mode
+  :config
+  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode)))
+
 ;; Flycheck error and linting
 ;; ==========================
 (use-package flycheck
@@ -629,7 +635,7 @@ point reaches the beginning or end of the buffer, stop there."
  '(company-quickhelp-color-foreground "thistle1")
  '(package-selected-packages
    (quote
-    (dumb-jump elisp-slime-nav ag flycheck-joker markdown-mode clojure-snippets flycheck rainbow-mode magit cider clojure-mode rainbow-delimiters paredit sr-speedbar smex monokai-theme moe-theme powerline auto-complete counsel ivy-hydra ace-window org-bullets which-key try use-package))))
+    (web-mode dumb-jump elisp-slime-nav ag flycheck-joker markdown-mode clojure-snippets flycheck rainbow-mode magit cider clojure-mode rainbow-delimiters paredit sr-speedbar smex monokai-theme moe-theme powerline auto-complete counsel ivy-hydra ace-window org-bullets which-key try use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
