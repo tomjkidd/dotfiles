@@ -162,6 +162,9 @@
   :config
   (which-key-mode))
 
+(use-package org
+  :ensure t)
+
 ;; Language Modes
 ;; ==============
 
@@ -169,10 +172,31 @@
   :ensure t
   :config
   ;; select region and hit tab to do clojure-align
-  (setq clojure-align-forms-automatically t))
+  (setq clojure-align-forms-automatically t)
+
+  ;; M-r paredit-raise-sexp will turn (some? [a b c]) to [a b c]
+  ;; Note: In previous case, cursor is on '[' of [a b c]
+  (add-hook 'clojure-mode-hook
+          (lambda ()
+            (setq inferior-lisp-program "lein repl")
+            (put-clojure-indent 'reg-event-db 1)
+            (put-clojure-indent 'reg-event-fx 1)
+            (put-clojure-indent 'reg-fx 1)
+            (put-clojure-indent 'reg-cofx 1)
+            (put-clojure-indent 'reg-sub 1)
+            (put-clojure-indent 'bind-relations 1)
+            (put-clojure-indent 'react-method 1)
+            (enable-paredit-mode)
+            (subword-mode))))
 
 (use-package markdown-mode
   :ensure t)
+
+(use-package web-mode
+  :ensure t
+  :config
+  (setq web-mode-css-indent-offset 2)
+  (add-to-list 'auto-mode-alist '("\\.scss?\\'" . web-mode)))
 
 ;; Flycheck error and linting
 ;; ==========================
@@ -283,6 +307,8 @@
   ;; It is normally mapped to C-u C-j, but there was a suggestion that I liked here
   ;; https://github.com/abo-abo/swiper/issues/55
   ;; ivy mode is also really useful
+
+  ;; When C-c j is used to open git-grep, you can use M-q to do a query/replace matches
   (ivy-mode 1)
   (setq ivy-wrap nil)
   (setq ivy-height 10)
@@ -618,6 +644,10 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package try
   :ensure t)
 
+(use-package gist
+  :ensure t
+  :defer t)
+
 (provide 'init)
 ;;; init.el ends here
 (custom-set-variables
@@ -629,7 +659,7 @@ point reaches the beginning or end of the buffer, stop there."
  '(company-quickhelp-color-foreground "thistle1")
  '(package-selected-packages
    (quote
-    (dumb-jump elisp-slime-nav ag flycheck-joker markdown-mode clojure-snippets flycheck rainbow-mode magit cider clojure-mode rainbow-delimiters paredit sr-speedbar smex monokai-theme moe-theme powerline auto-complete counsel ivy-hydra ace-window org-bullets which-key try use-package))))
+    (ob-clojure gist web-mode dumb-jump elisp-slime-nav ag flycheck-joker markdown-mode clojure-snippets flycheck rainbow-mode magit cider clojure-mode rainbow-delimiters paredit sr-speedbar smex monokai-theme moe-theme powerline auto-complete counsel ivy-hydra ace-window org-bullets which-key try use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

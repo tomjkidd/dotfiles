@@ -1,4 +1,4 @@
-PATH=$PATH:~/bin
+PATH=$PATH:~/bin:~/node_modules/.bin
 
 export PS1="\[\033[93m\]\W\[\033[m\] $ "
 export CLICOLOR=1
