@@ -176,6 +176,9 @@
 
   ;; M-r paredit-raise-sexp will turn (some? [a b c]) to [a b c]
   ;; Note: In previous case, cursor is on '[' of [a b c]
+
+  ;; C-M-u backward-up-list
+  ;; C-M-d down-list
   (add-hook 'clojure-mode-hook
           (lambda ()
             (setq inferior-lisp-program "lein repl")
@@ -196,7 +199,8 @@
   :ensure t
   :config
   (setq web-mode-css-indent-offset 2)
-  (add-to-list 'auto-mode-alist '("\\.scss?\\'" . web-mode)))
+  (add-to-list 'auto-mode-alist '("\\.scss?\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode)))
 
 ;; Flycheck error and linting
 ;; ==========================
@@ -392,12 +396,17 @@
 (use-package monokai-theme
   :ensure t
   :config
-  (load-theme 'monokai t)
+  ;;(load-theme 'monokai t)
   (setq monokai-height-minus-1 0.8
         monokai-height-plus-1 1.1
         monokai-height-plus-2 1.15
         monokai-height-plus-3 1.2
         monokai-height-plus-4 1.5))
+
+(use-package dracula-theme
+  :ensure t
+  :config
+  (load-theme 'dracula t))
 
 ;; ability to figure out the face at cursor
 (defun what-face (pos)
@@ -618,6 +627,21 @@ point reaches the beginning or end of the buffer, stop there."
 (global-set-key [remap move-beginning-of-line]
                 'sacha/smarter-move-beginning-of-line)
 
+(defun push-mark-no-activate ()
+  "Pushes `point' to `mark-ring' and does not activate the region
+   Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
+  (interactive)
+  (push-mark (point) t nil)
+  (message "Pushed mark to ring"))
+(global-set-key (kbd "C-`") 'push-mark-no-activate)
+
+(defun jump-to-mark ()
+  "Jumps to the local mark, respecting the `mark-ring' order.
+  This is the same as using \\[set-mark-command] with the prefix argument."
+  (interactive)
+  (set-mark-command 1))
+(global-set-key (kbd "M-`") 'jump-to-mark)
+
 ;; a function to quickly insert the current timestamp
 (defun insert-timestamp ()
   (interactive)
@@ -657,9 +681,13 @@ point reaches the beginning or end of the buffer, stop there."
  ;; If there is more than one, they won't work right.
  '(company-quickhelp-color-background "blue violet")
  '(company-quickhelp-color-foreground "thistle1")
+ '(custom-safe-themes
+   (quote
+    ("ff7625ad8aa2615eae96d6b4469fcc7d3d20b2e1ebc63b761a349bebbb9d23cb" "3629b62a41f2e5f84006ff14a2247e679745896b5eaa1d5bcfbc904a3441b0cd" default)))
  '(package-selected-packages
    (quote
     (ob-clojure gist web-mode dumb-jump elisp-slime-nav ag flycheck-joker markdown-mode clojure-snippets flycheck rainbow-mode magit cider clojure-mode rainbow-delimiters paredit sr-speedbar smex monokai-theme moe-theme powerline auto-complete counsel ivy-hydra ace-window org-bullets which-key try use-package))))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
