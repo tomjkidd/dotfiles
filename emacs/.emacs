@@ -165,7 +165,8 @@
 (use-package org
   :ensure t
   :config
-  (setq org-agenda-files '("~/Dropbox/org/agenda.org")))
+  (setq org-agenda-files '("~/Dropbox/org/agenda.org"
+                           "~/Dropbox/org/exocortex.org")))
 
 ;; Language Modes
 ;; ==============
