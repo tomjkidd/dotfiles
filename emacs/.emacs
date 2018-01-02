@@ -163,7 +163,9 @@
   (which-key-mode))
 
 (use-package org
-  :ensure t)
+  :ensure t
+  :config
+  (setq org-agenda-files '("~/Dropbox/org/agenda.org")))
 
 ;; Language Modes
 ;; ==============
