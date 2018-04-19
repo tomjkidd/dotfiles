@@ -30,6 +30,7 @@ alias gpu='git pull'
 alias grm='git rm'
 alias grmr='git rm -r'
 alias gs='git status'
+alias gss='git stash save' # Note, meant to be used with a following msg, eg `gss "What this stash does..."
 alias gua='git reset HEAD --'
 alias gchangedc='git diff-tree --no-commit-id --name-only -r'
 alias gchanged='gchangedc HEAD'
@@ -49,6 +50,8 @@ alias rmvol='sudo rmdir /Volumes/'
 alias grepf='grep -n --color'
 alias grepd='grep -rn --color'
 alias grepdc='grep -rn -C 3 --color'
+
+alias envs='env | sort'
 
 # NOTE: Eastwood only works on .clj files, doesn't know how to handle namespaced keywords.
 alias leb="lein eastwood '{:add-linters [:unused-namespaces] :namespaces [bengal.util] :exclude-linters [:unlimited-use]}'"

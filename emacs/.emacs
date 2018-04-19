@@ -166,7 +166,8 @@
   :ensure t
   :config
   (setq org-agenda-files '("~/Dropbox/org/agenda.org"
-                           "~/Dropbox/org/exocortex.org")))
+                           "~/Dropbox/org/exocortex.org"
+                           "~/secrets/org/agenda.org")))
 
 ;; Language Modes
 ;; ==============
@@ -192,6 +193,15 @@
             (put-clojure-indent 'reg-sub 1)
             (put-clojure-indent 'bind-relations 1)
             (put-clojure-indent 'react-method 1)
+            (put-clojure-indent 'render 1)
+            (put-clojure-indent 'initLocalState 1)
+            (put-clojure-indent 'componentWillMount 1)
+            (put-clojure-indent 'componentDidMount 1)
+            (put-clojure-indent 'componentWillReceiveProps 1)
+            (put-clojure-indent 'shouldComponentUpdate 1)
+            (put-clojure-indent 'componentWillUpdate 1)
+            (put-clojure-indent 'componentDidUpdate 1)
+            (put-clojure-indent 'componentWillUnmount 1)
             (enable-paredit-mode)
             (subword-mode))))
 
