@@ -342,6 +342,15 @@
   (global-set-key (kbd "<C-return>") 'ivy-immediate-done)
   (define-key read-expression-map (kbd "C-r") 'counsel-expression-history))
 
+;; git grep the symbol at point
+(defun cgg-at-point ()
+    (interactive)
+    (counsel-git-grep
+     nil
+     (thing-at-point 'sexp)))
+(global-set-key (kbd "M-=") 'cgg-at-point)
+(global-set-key (kbd "C-c .") 'cgg-at-point)
+
 (use-package projectile
   :disabled)
 
