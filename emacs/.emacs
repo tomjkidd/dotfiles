@@ -728,6 +728,9 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package counsel-osx-app
   :ensure t)
 
+(use-package define-word
+  :ensure t)
+
 (provide 'init)
 ;;; init.el ends here
 (custom-set-variables
@@ -742,7 +745,7 @@ point reaches the beginning or end of the buffer, stop there."
     ("ff7625ad8aa2615eae96d6b4469fcc7d3d20b2e1ebc63b761a349bebbb9d23cb" "3629b62a41f2e5f84006ff14a2247e679745896b5eaa1d5bcfbc904a3441b0cd" default)))
  '(package-selected-packages
    (quote
-    (counsel-osx-app ob-clojure gist web-mode dumb-jump elisp-slime-nav ag flycheck-joker markdown-mode clojure-snippets flycheck rainbow-mode magit cider clojure-mode rainbow-delimiters paredit sr-speedbar smex monokai-theme moe-theme powerline auto-complete counsel ivy-hydra ace-window org-bullets which-key try use-package))))
+    (define-word defined-word counsel-osx-app ob-clojure gist web-mode dumb-jump elisp-slime-nav ag flycheck-joker markdown-mode clojure-snippets flycheck rainbow-mode magit cider clojure-mode rainbow-delimiters paredit sr-speedbar smex monokai-theme moe-theme powerline auto-complete counsel ivy-hydra ace-window org-bullets which-key try use-package))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
