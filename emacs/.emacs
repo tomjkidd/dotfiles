@@ -376,9 +376,21 @@ a symbol isn't necessary."
        nil
        name)))
 
+  (defun tk-swiper-suffix-at-point ()
+    "Perform swiper search for the name at point.
+Assumes clojure symbol in the form <namespace>/<name>, and will
+just git grep the name."
+    (interactive)
+    (let* ((ns-and-name (thing-at-point 'symbol t))
+           (name (car (last (split-string ns-and-name "/")))))
+      (swiper
+       name)))
+
   (global-set-key (kbd "M-=") 'tk-cgg-at-point)
   (global-set-key (kbd "C-c .") 'tk-cgg-at-point)
-  (global-set-key (kbd "C-c C-.") 'tk-cgg-suffix-at-point))
+  (global-set-key (kbd "C-c C-.") 'tk-cgg-suffix-at-point)
+  (global-set-key (kbd "C-c C-j") 'tk-cgg-suffix-at-point)
+  (global-set-key (kbd "C-c C-s") 'tk-swiper-suffix-at-point))
 
 (use-package projectile
   :disabled)
