@@ -350,16 +350,33 @@
   (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
   (global-set-key (kbd "M-y") 'counsel-yank-pop)
   (global-set-key (kbd "<C-return>") 'ivy-immediate-done)
-  (define-key read-expression-map (kbd "C-r") 'counsel-expression-history))
+  (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
 
-;; git grep the symbol at point
-(defun cgg-at-point ()
+  (defun tk-cgg-at-point ()
+    "Perform a git grep for the symbol at point."
     (interactive)
     (counsel-git-grep
      nil
      (thing-at-point 'sexp)))
-(global-set-key (kbd "M-=") 'cgg-at-point)
-(global-set-key (kbd "C-c .") 'cgg-at-point)
+
+  (defun tk-cgg-suffix-at-point ()
+    "Perform a git grep for the name at point.
+Assumes clojure symbol in the form <namespace>/<name>, and will
+just git grep the name.
+
+When I'm not using CIDER, I find myself doing git grep with symbol names
+in the context of a project, and this makes it so that typing the name of
+a symbol isn't necessary."
+    (interactive)
+    (let* ((ns-and-name (thing-at-point 'symbol t))
+           (name (car (last (split-string ns-and-name "/")))))
+      (counsel-git-grep
+       nil
+       name)))
+
+  (global-set-key (kbd "M-=") 'tk-cgg-at-point)
+  (global-set-key (kbd "C-c .") 'tk-cgg-at-point)
+  (global-set-key (kbd "C-c C-.") 'tk-cgg-suffix-at-point))
 
 (use-package projectile
   :disabled)
