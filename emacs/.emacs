@@ -330,6 +330,8 @@
   (setq ivy-wrap nil)
   (setq ivy-height 10)
   (setq ivy-use-virtual-buffers t)
+  ;; Shows x/y where x is current index, y is total
+  (setq ivy-count-format "%d/%d ")
   (setq confirm-nonexistent-file-or-buffer t)
   (setq ivy-extra-directories nil)
   (setq enable-recursive-minibuffers t)
