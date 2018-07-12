@@ -33,6 +33,9 @@
 ;; expand to full-screen
 (setq initial-frame-alist (quote ((fullscreen . maximized))))
 
+;; set scratch buffer mode
+(setq initial-major-mode 'clojure-mode)
+
 ;; don't show various things
 (setq initial-scratch-message nil)
 (setq inhibit-startup-message t)
@@ -145,6 +148,9 @@
   ;; d can be used to diff
   ;; h can be used to create branches
   (global-set-key (kbd "C-x g") 'magit-status))
+
+(use-package git-timemachine
+  :ensure t)
 
 ;; displays a list of emacs commands that have been executed using C-c o
 (use-package command-log-mode
@@ -594,11 +600,21 @@ just git grep the name."
 (use-package expand-region
   :ensure t
   :config
-  ;; This finally provides a nice way to select and entire s-expr!
+  ;; This finally provides a nice way to select an entire s-expr!
   ;; If you are at the starting paren, C-= will select up to the
   ;; matching closing paren. This makes quick C-w for yanking an
   ;; s-expr to move it, tasty!
-  (global-set-key (kbd "C-=") 'er/expand-region))
+  (global-set-key (kbd "C-=") 'er/expand-region)
+  (global-set-key (kbd "C--") 'er/contract-region))
+
+;; allow ability to mark and kill things effectively
+(use-package easy-kill
+  :ensure t
+  :config
+  ;; C-M-SPC will mark an s-expr, C-+ and C-- will expand/contract
+  ;; the selection.
+  (global-set-key [remap kill-ring-save] 'easy-kill)
+  (global-set-key [remap mark-sexp] 'easy-mark))
 
 ;; automatic re-indentation when code organization changes
 (use-package aggressive-indent
@@ -654,6 +670,11 @@ just git grep the name."
   (define-key yas-minor-mode-map (kbd "<tab>") nil)
   (define-key yas-minor-mode-map (kbd "TAB") nil)
   (define-key yas-minor-mode-map (kbd "<C-tab>") 'yas-expand))
+
+(use-package dockerfile-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode)))
 
 ;; Experimental
 ;; ============
@@ -751,7 +772,7 @@ point reaches the beginning or end of the buffer, stop there."
     ("ff7625ad8aa2615eae96d6b4469fcc7d3d20b2e1ebc63b761a349bebbb9d23cb" "3629b62a41f2e5f84006ff14a2247e679745896b5eaa1d5bcfbc904a3441b0cd" default)))
  '(package-selected-packages
    (quote
-    (js2-mode define-word defined-word counsel-osx-app ob-clojure gist web-mode dumb-jump elisp-slime-nav ag flycheck-joker markdown-mode clojure-snippets flycheck rainbow-mode magit cider clojure-mode rainbow-delimiters paredit sr-speedbar smex monokai-theme moe-theme powerline auto-complete counsel ivy-hydra ace-window org-bullets which-key try use-package))))
+    (git-timemachine dockerfile-mode easy-kill js2-mode define-word defined-word counsel-osx-app ob-clojure gist web-mode dumb-jump elisp-slime-nav ag flycheck-joker markdown-mode clojure-snippets flycheck rainbow-mode magit cider clojure-mode rainbow-delimiters paredit sr-speedbar smex monokai-theme moe-theme powerline auto-complete counsel ivy-hydra ace-window org-bullets which-key try use-package))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
