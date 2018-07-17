@@ -4,6 +4,7 @@ export PS1="\[\033[93m\]\W\[\033[m\] $ "
 export CLICOLOR=1
 
 # Alias
+# -- git --
 alias ga='git add'
 alias gb='git branch'
 alias gbd='git branch -d'
@@ -53,11 +54,16 @@ alias grepdc='grep -rn -C 3 --color'
 
 alias envs='env | sort'
 
+# -- clojure and clojurescript --
 # NOTE: Eastwood only works on .clj files, doesn't know how to handle namespaced keywords.
 alias leb="lein eastwood '{:add-linters [:unused-namespaces] :namespaces [bengal.util] :exclude-linters [:unlimited-use]}'"
 alias jcljs='find ./src/salk -type f -name "*" | xargs -n 1 joker --lintcljs'
 alias clj-repl='rlwrap java -jar ~/.m2/repository/org/clojure/clojure/1.8.0/clojure-1.8.0.jar'
 alias clj-server-repl='java -cp ~/.m2/repository/org/clojure/clojure/1.8.0/clojure-1.8.0.jar -Dclojure.server.repl="{:port 5555 :accept clojure.core.server/repl}" clojure.main'
+# Requires a deps.edn with the following, and `brew install clojure` to have been run
+# {:deps {org.clojure/clojurescript {:mvn/version "1.10.339"}}}
+alias cljs='clj -m cljs.main --repl'
+alias cljsh='clj -m cljs.main --help'
 
 # Git Completions
 if [ -f /usr/local/etc/bash_completion.d/git-completion.bash ]; then
