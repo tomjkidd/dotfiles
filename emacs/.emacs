@@ -760,6 +760,41 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package define-word
   :ensure t)
 
+;; From the end of an sexp, send it to *shell* and evaluate it
+(defun sh-send-sexp (&optional step)
+  (interactive ())
+  (let ((proc (get-process "shell"))
+        pbuf min max command)
+    (unless proc
+      (let ((currbuff (current-buffer)))
+        (shell)
+        (switch-to-buffer currbuff)
+        (setq proc (get-process "shell"))
+        ))
+    (setq pbuff (process-buffer proc))
+    (easy-mark)
+    (if (use-region-p)
+        (setq min (region-beginning)
+              max (region-end))
+      (setq min (point-at-bol)
+            max (point-at-eol)))
+    (setq command (concat (buffer-substring min max) "\n"))
+    (with-current-buffer pbuff
+      (goto-char (process-mark proc))
+      (insert command)
+      (move-marker (process-mark proc) (point))
+      (setq comint-scroll-to-bottom-on-output t)
+      )
+    (process-send-string  proc command)
+    (display-buffer (process-buffer proc) t)
+    (when step
+      (goto-char max)
+      (next-line))
+    (keyboard-quit)
+    ))
+
+(global-set-key (kbd "C-c C-e") 'sh-send-sexp)
+
 (provide 'init)
 ;;; init.el ends here
 (custom-set-variables
