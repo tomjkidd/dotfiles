@@ -30,6 +30,6 @@ Each invocation of stow in this manner will put the dirs and files in the target
 
 So,
 
-`stow -v -t $HOME -R emacs will put ./emacs into ~/.emacs, which is where emacs expects it to be.
+`stow -v -t $HOME -R emacs` will put ./emacs into ~/.emacs, which is where emacs expects it to be.
 
 In this same way, you can work with other dotfiles. Pretty neat.

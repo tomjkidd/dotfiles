@@ -208,6 +208,8 @@
             (put-clojure-indent 'componentWillUpdate 1)
             (put-clojure-indent 'componentDidUpdate 1)
             (put-clojure-indent 'componentWillUnmount 1)
+            (put-clojure-indent 'params 1)
+            (put-clojure-indent 'query 1)
             (enable-paredit-mode)
             (subword-mode))))
 
