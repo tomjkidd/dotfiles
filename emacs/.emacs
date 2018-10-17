@@ -762,10 +762,40 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package define-word
   :ensure t)
 
-;; From the end of an sexp, send it to *shell* and evaluate it
+(defvar tk-shell-process-name nil
+  "The space-separated string that contains \"<process-name> <buffer-name>\".")
+
+(defun tk-get-shell-process-names ()
+  "Return a list of strings that help identify the process/buffer for shell buffers."
+  (cl-remove-if (lambda (b)
+                  (not (string-prefix-p "shell" b)))
+                (mapcar (lambda (p)
+                          (concat (process-name p) " (buffer-name: " (buffer-name (process-buffer p)) " )"))
+                        (process-list))))
+
+(defun tk-choose-shell-function ()
+  "Set the value for tk-shell-process-name."
+  (interactive)
+  (ivy-read "Choose shell process: "
+            (tk-get-shell-process-names)
+            :keymap counsel-describe-map
+            :preselect (ivy-thing-at-point)
+            :history 'tk-choose-shell-symbol-history
+            :require-match t
+            ;:sort t
+            :action (lambda (x)
+                      (setq tk-shell-process-name x)
+                      (switch-to-buffer
+                       (car (cdr (cdr (split-string tk-shell-process-name))))))
+            :caller 'tk-choose-shell-function))
+
 (defun sh-send-sexp (&optional step)
+  "Send an sexp to a shell buffer, for quick repl usage.
+STEP is a boolean, controls if you want to advance to a new line."
   (interactive ())
-  (let ((proc (get-process "shell"))
+  (let ((proc (or (unless (eq nil tk-shell-process-name)
+                    (get-process (car (split-string tk-shell-process-name))))
+                  (get-process "shell")))
         pbuf min max command)
     (unless proc
       (let ((currbuff (current-buffer)))
@@ -774,7 +804,13 @@ point reaches the beginning or end of the buffer, stop there."
         (setq proc (get-process "shell"))
         ))
     (setq pbuff (process-buffer proc))
-    (easy-mark)
+
+    ;; If a closing paren, assume a sexp, and attempt
+    ;; to mark the whole thing for send
+    (when (string= ")" (string (preceding-char)))
+      (paredit-backward)
+      (easy-mark))
+
     (if (use-region-p)
         (setq min (region-beginning)
               max (region-end))
