@@ -823,7 +823,8 @@ STEP is a boolean, controls if you want to advance to a new line."
       (move-marker (process-mark proc) (point))
       (setq comint-scroll-to-bottom-on-output t)
       )
-    (process-send-string  proc command)
+    (process-send-string proc command)
+    (accept-process-output proc)
     (display-buffer (process-buffer proc) t)
     (when step
       (goto-char max)
