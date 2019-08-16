@@ -110,5 +110,22 @@ get_latest_release() {
 # $ get_latest_release "creationix/nvm"
 # v0.31.4
 
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
+if [[ $INSIDE_EMACS ]]; then
+    export PAGER="/bin/cat"
+    cd ~/ || exit;
+else
+    export PAGER="/usr/bin/less"
+fi
+
+add_ssh_key_osx() {
+    # lein-git-down needs this done, looks like after every restart
+    # https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/
+    eval "$(ssh-agent -s)";
+    ssh-add -K ~/.ssh/id_rsa;
+}
+
+postgres_show_config_file () {
+    psql bengal_dev -c 'SHOW config_file';
+}
+
+alias launchjupyter='~/bash_scripts/launch-jupyter.sh'
