@@ -769,6 +769,13 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package define-word
   :ensure t)
 
+(use-package fold-dwim
+  :ensure t
+  :config
+  (global-set-key (kbd "<f7>")      'fold-dwim-toggle)
+  (global-set-key (kbd "<M-f7>")    'fold-dwim-hide-all)
+  (global-set-key (kbd "<S-M-f7>")  'fold-dwim-show-all))
+
 (use-package restclient
   :ensure t)
 
