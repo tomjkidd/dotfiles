@@ -68,6 +68,10 @@ alias clj-server-repl='java -cp ~/.m2/repository/org/clojure/clojure/1.8.0/cloju
 # {:deps {org.clojure/clojurescript {:mvn/version "1.10.339"}}}
 alias cljs='clj -m cljs.main --repl'
 alias cljsh='clj -m cljs.main --help'
+# Wanted to make sure I have this tool handy
+alias jvisvm='jvisualvm'
+# Display the non-standard options available for the jvm
+alias javaX='java -X'
 
 cljs_lib_version_grep() {
     git grep "(def +lib-version+" | awk '{ gsub(":[ ]*[\(]def [\+]lib-version[\+]","", $0); gsub("[\"]","",$0); gsub("[\)]","",$0); print $0 }' | grep "auth0-lock"

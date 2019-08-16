@@ -190,28 +190,34 @@
   ;; C-M-u backward-up-list
   ;; C-M-d down-list
   (add-hook 'clojure-mode-hook
-          (lambda ()
-            (setq inferior-lisp-program "lein repl")
-            (put-clojure-indent 'reg-event-db 1)
-            (put-clojure-indent 'reg-event-fx 1)
-            (put-clojure-indent 'reg-fx 1)
-            (put-clojure-indent 'reg-cofx 1)
-            (put-clojure-indent 'reg-sub 1)
-            (put-clojure-indent 'bind-relations 1)
-            (put-clojure-indent 'react-method 1)
-            (put-clojure-indent 'render 1)
-            (put-clojure-indent 'initLocalState 1)
-            (put-clojure-indent 'componentWillMount 1)
-            (put-clojure-indent 'componentDidMount 1)
-            (put-clojure-indent 'componentWillReceiveProps 1)
-            (put-clojure-indent 'shouldComponentUpdate 1)
-            (put-clojure-indent 'componentWillUpdate 1)
-            (put-clojure-indent 'componentDidUpdate 1)
-            (put-clojure-indent 'componentWillUnmount 1)
-            (put-clojure-indent 'params 1)
-            (put-clojure-indent 'query 1)
-            (enable-paredit-mode)
-            (subword-mode))))
+            (lambda ()
+              (setq inferior-lisp-program "lein repl")
+              (put-clojure-indent 'reg-event-db 1)
+              (put-clojure-indent 'reg-event-fx 1)
+              (put-clojure-indent 'reg-fx 1)
+              (put-clojure-indent 'reg-cofx 1)
+              (put-clojure-indent 'reg-sub 1)
+              (put-clojure-indent 'bind-relations 1)
+              (put-clojure-indent 'react-method 1)
+              (put-clojure-indent 'render 1)
+              (put-clojure-indent 'initLocalState 1)
+              (put-clojure-indent 'componentWillMount 1)
+              (put-clojure-indent 'componentDidMount 1)
+              (put-clojure-indent 'componentWillReceiveProps 1)
+              (put-clojure-indent 'shouldComponentUpdate 1)
+              (put-clojure-indent 'componentWillUpdate 1)
+              (put-clojure-indent 'componentDidUpdate 1)
+              (put-clojure-indent 'componentWillUnmount 1)
+              (put-clojure-indent 'params 1)
+              (put-clojure-indent 'query 1)
+              (enable-paredit-mode)
+              (subword-mode)
+              (with-eval-after-load 'clojure-mode
+                (define-key clojure-mode-map (kbd "C-c C-n") #'forward-sexp)
+                (define-key clojure-mode-map (kbd "C-c C-p") #'backward-sexp)
+                ;(define-key clojure-mode-map (kbd "C-m") #'forward-sexp)
+                ;(define-key clojure-mode-map (kbd "C-]") #'backward-sexp)
+                ))))
 
 (use-package markdown-mode
   :ensure t)
@@ -342,6 +348,7 @@
   ;; ivy mode is also really useful
 
   ;; When C-c j is used to open git-grep, you can use M-q to do a query/replace matches
+  ;; From a search, C-o u will put the search into its own buffer, ? will give you key bindings for that buffer!
   (ivy-mode 1)
   (setq ivy-wrap nil)
   (setq ivy-height 10)
@@ -762,6 +769,14 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package define-word
   :ensure t)
 
+(use-package restclient
+  :ensure t)
+
+(use-package linum-relative
+  :ensure t)
+
+(use-package nginx-mode
+  :ensure t)
 (defvar tk-shell-process-name nil
   "The space-separated string that contains \"<process-name> <buffer-name>\".")
 
