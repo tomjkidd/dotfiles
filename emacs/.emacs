@@ -484,6 +484,28 @@ just git grep the name."
   :config
   (load-theme 'dracula t))
 
+;; Put cursor on text you want to change, M-x customize-face
+;; Change the font for strings
+;; (set-face-foreground 'font-lock-string-face "#f1fa8c")
+
+;; Change the font color for docstrings
+;(set-face-foreground 'font-lock-doc-face "#ffb86c")
+;(set-face-foreground 'font-lock-doc-face "#F1FBFF")
+;(set-face-foreground 'font-lock-doc-face "#7B98A2")
+(set-face-foreground 'font-lock-doc-face "#C3D9E0")
+
+;; Change the font color for comments
+(set-face-foreground 'font-lock-comment-face "light pink")
+
+;; Change the font colors for markdown headers
+;; Used https://github.com/dracula/emacs/blob/master/dracula-theme.el for rgb values!
+(set-face-foreground 'markdown-header-face-1 "#ff79c6")
+(set-face-foreground 'markdown-header-face-2 "#bd93f9")
+(set-face-foreground 'markdown-header-face-3 "#50fa7b")
+(set-face-foreground 'markdown-header-face-4 "#f1fa8c")
+(set-face-foreground 'markdown-header-face-5 "#8be9fd")
+(set-face-foreground 'markdown-header-face-6 "##ffb86c")
+
 ;; ability to figure out the face at cursor
 (defun what-face (pos)
   (interactive "d")
