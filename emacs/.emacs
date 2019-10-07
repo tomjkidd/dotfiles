@@ -807,6 +807,9 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package nginx-mode
   :ensure t)
 
+(use-package fish-mode
+  :ensure t)
+
 (defvar tk-shell-process-name nil
   "The space-separated string that contains \"<process-name> <buffer-name>\".")
 
@@ -952,7 +955,7 @@ STEP is a boolean, controls if you want to advance to a new line."
     ("ff7625ad8aa2615eae96d6b4469fcc7d3d20b2e1ebc63b761a349bebbb9d23cb" "3629b62a41f2e5f84006ff14a2247e679745896b5eaa1d5bcfbc904a3441b0cd" default)))
  '(package-selected-packages
    (quote
-    (nginx-mode linum-relative restclient fold-dwim git-timemachine dockerfile-mode easy-kill js2-mode define-word defined-word counsel-osx-app ob-clojure gist web-mode dumb-jump elisp-slime-nav ag flycheck-joker markdown-mode clojure-snippets flycheck rainbow-mode magit cider clojure-mode rainbow-delimiters paredit sr-speedbar smex monokai-theme moe-theme powerline auto-complete counsel ivy-hydra ace-window org-bullets which-key try use-package))))
+    (fish-mode nginx-mode linum-relative restclient fold-dwim git-timemachine dockerfile-mode easy-kill js2-mode define-word defined-word counsel-osx-app ob-clojure gist web-mode dumb-jump elisp-slime-nav ag flycheck-joker markdown-mode clojure-snippets flycheck rainbow-mode magit cider clojure-mode rainbow-delimiters paredit sr-speedbar smex monokai-theme moe-theme powerline auto-complete counsel ivy-hydra ace-window org-bullets which-key try use-package))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
