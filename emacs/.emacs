@@ -869,18 +869,43 @@ STEP is a boolean, controls if you want to advance to a new line."
       (goto-char (process-mark proc))
       (insert command)
       (move-marker (process-mark proc) (point))
-      (setq comint-scroll-to-bottom-on-output t)
-      )
+      (setq comint-scroll-to-bottom-on-output t))
     (process-send-string proc command)
     (accept-process-output proc)
     (display-buffer (process-buffer proc) t)
     (when step
       (goto-char max)
       (next-line))
-    (keyboard-quit)
-    ))
+    (keyboard-quit)))
 
-(global-set-key (kbd "C-c C-e") 'sh-send-sexp)
+(global-set-key (kbd "C-c C-w") 'sh-send-sexp)
+
+;; Inspired by https://superuser.com/a/448692
+(defun es-send-via-tmux (command)
+  "Send a string COMMAND to pane 0 of tmux."
+  (call-process "/usr/local/bin/tmux" nil nil nil "send-keys" "-t 0" command "C-m"))
+
+(defun tk-send-sexp-to-tmux ()
+  "Send an sexp to a tmux terminal, using pane 0."
+  (interactive ())
+  (let (min max command)
+    ;; If a closing paren, assume a sexp, and attempt
+    ;; to mark the whole thing for send
+    (when (string= ")" (string (preceding-char)))
+      (paredit-backward)
+      (easy-mark))
+
+    (if (use-region-p)
+        (setq min (region-beginning)
+              max (region-end))
+      (setq min (point-at-bol)
+            max (point-at-eol)))
+    (setq command (buffer-substring min max))
+
+    (es-send-via-tmux command)
+    (keyboard-quit)))
+
+(global-set-key (kbd "C-c C-e") 'tk-send-sexp-to-tmux)
 
 (defun fira-code-mode--make-alist (list)
   "Generate prettify-symbols alist from LIST."
