@@ -220,7 +220,10 @@
                 ))))
 
 (use-package markdown-mode
-  :ensure t)
+  :ensure t
+  :config
+  (with-eval-after-load 'markdown-mode
+    (define-key markdown-mode-map (kbd "C-c C-l") nil)))
 
 (use-package js2-mode
   :ensure t
@@ -641,13 +644,21 @@ just git grep the name."
   (global-set-key (kbd "C--") 'er/contract-region))
 
 ;; allow ability to mark and kill things effectively
+;; M-w ? for info on making kill selection
+;; M-w w C-w - Select word and then kill it
+;; M-w w C-SPC - Selet word and then mark it as region
+;; M-c w - Select and mark word as active region
+;; M-c C-w - Select and kill word
+;; M-c is also mapped to C-M-SPC!
+;; C-M-k - Kill sexp!
 (use-package easy-kill
   :ensure t
   :config
   ;; C-M-SPC will mark an s-expr, C-+ and C-- will expand/contract
   ;; the selection.
   (global-set-key [remap kill-ring-save] 'easy-kill)
-  (global-set-key [remap mark-sexp] 'easy-mark))
+  (global-set-key [remap mark-sexp] 'easy-mark)
+  (global-set-key (kbd "M-c") 'easy-mark))
 
 ;; automatic re-indentation when code organization changes
 (use-package aggressive-indent
@@ -878,15 +889,83 @@ STEP is a boolean, controls if you want to advance to a new line."
       (next-line))
     (keyboard-quit)))
 
-(global-set-key (kbd "C-c C-w") 'sh-send-sexp)
+(defun tk-buffer-mode (&optional buffer-or-name)
+  "Return the major mode associated with a buffer.
+If BUFFER-OR-NAME is nil return current buffer's mode."
+  (buffer-local-value 'major-mode
+   (if buffer-or-name (get-buffer buffer-or-name) (current-buffer))))
+
+(defun tk-mark-what-i-mean ()
+  (interactive ())
+  (cond
+   ((equal major-mode 'clojure-mode) (mark-defun))
+   ((equal major-mode 'emacs-lisp-mode) (mark-defun))
+   (t (print major-mode))))
+
+;; TODO: Figure out which other characters need escapeing, and do that!
+(defun tk-tmux-escape-command (command)
+  ""
+  (save-match-data
+    (if (string-match ";" command)
+        (replace-match "\\;" t t (s-trim command))
+      command)))
 
 ;; Inspired by https://superuser.com/a/448692
 (defun es-send-via-tmux (command)
-  "Send a string COMMAND to pane 0 of tmux."
-  (call-process "/usr/local/bin/tmux" nil nil nil "send-keys" "-t 0" command "C-m"))
+  "Send a string COMMAND to pane 1 of tmux."
+  (print (tk-tmux-escape-command command))
+  (call-process "/usr/local/bin/tmux" nil nil nil "send-keys" "-t 1" (tk-tmux-escape-command command) "C-m"))
+
+(defun s-trim-left (s)
+  "Remove whitespace at the beginning of S."
+  (declare (pure t) (side-effect-free t))
+  (save-match-data
+    (if (string-match "\\`[ \t\n\r]+" s)
+        (replace-match "" t t s)
+      s)))
+
+(defun s-trim-right (s)
+  "Remove whitespace at the end of S."
+  (save-match-data
+    (declare (pure t) (side-effect-free t))
+    (if (string-match "[ \t\n\r]+\\'" s)
+        (replace-match "" t t s)
+      s)))
+
+(defun s-trim (s)
+  "Remove whitespace at the beginning and end of S."
+  (declare (pure t) (side-effect-free t))
+  (s-trim-left (s-trim-right s)))
+
+(defun tk-send-region-to-tmux ()
+  "Return the selected region as a string."
+  (interactive ())
+  (es-send-via-tmux (buffer-substring (region-beginning) (region-end)))
+  (goto-char (region-end))
+  (keyboard-quit))
+
+(defun tk-dwim-to-tmux ()
+  "Experimental: Want to be able to have a context sensitive mechanism to guess what to send to tmux."
+  (interactive ())
+  (tk-mark-what-i-mean)
+  (tk-send-region-to-tmux))
+
+(defun tk-mark-line ()
+  "From anywhere on a line, mark the line (to create a region).
+Will move cursor to the end of the line."
+  (interactive ())
+  (move-beginning-of-line nil)
+  (set-mark-command nil)
+  (move-end-of-line nil))
+
+(defun tk-send-line-to-tmux ()
+  "Send whole line that the cursor is on to a tmux terminal, using pane 1."
+  (interactive ())
+  (tk-mark-line)
+  (tk-send-region-to-tmux))
 
 (defun tk-send-sexp-to-tmux ()
-  "Send an sexp to a tmux terminal, using pane 0."
+  "Send an sexp to a tmux terminal, using pane 1."
   (interactive ())
   (let (min max command)
     ;; If a closing paren, assume a sexp, and attempt
@@ -905,7 +984,33 @@ STEP is a boolean, controls if you want to advance to a new line."
     (es-send-via-tmux command)
     (keyboard-quit)))
 
+(global-set-key (kbd "C-c C-w") 'sh-send-sexp)
 (global-set-key (kbd "C-c C-e") 'tk-send-sexp-to-tmux)
+(global-set-key (kbd "C-c e") 'tk-send-region-to-tmux)
+(global-set-key (kbd "C-c C-l") 'tk-send-line-to-tmux)
+
+(defun tk-copy-file-name-to-clipboard ()
+  "Copy the current buffer file name to the clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to the clipboard." filename))))
+
+;; M-space, this will clean up spaces
+;; (just-one-space)
+
+(defun tk-just-one-space ()
+  "Does a `paredit-forward-delete` followed by a `just-one-space`.
+This is useful when you have the cursor at the end of a line,
+and want to 'pull' the next line up to it with one go."
+  (interactive)
+  (paredit-forward-delete)
+  (just-one-space))
+
+(global-set-key (kbd "M-SPC") 'tk-just-one-space)
 
 (defun fira-code-mode--make-alist (list)
   "Generate prettify-symbols alist from LIST."
