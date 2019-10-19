@@ -6,6 +6,12 @@ Should be as easy as cloning a git repo and being in business.
 
 # Stow
 
+The [stow][1] tool is used to manage putting the dotfiles in this repo into their proper location
+in the user's home directory via symlinks. This means that updates occur to the files in the repo,
+and are available immediately without having to synchronize or copy anything.
+
+[1]: https://www.gnu.org/software/stow/manual/stow.html
+
 ## Terms and Example Command
 
 
