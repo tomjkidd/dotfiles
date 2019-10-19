@@ -1,0 +1,5 @@
+#!/bin/bash
+
+stow -v -t "$HOME" -R emacs
+stow -v -t "$HOME" -R bash
+stow -v -t "$HOME" -R tmux

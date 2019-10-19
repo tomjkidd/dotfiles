@@ -1,22 +1,12 @@
-* The plan
+* Motivation
+
 I'd like to be able to quickly sync the important files that I share across computers
 Should be as easy as cloning a git repo and being in business
 
-** Files
-- .emacs
-- .bash_profile
-
-** Value
-- .emacs file makes it easy to jump right into using emacs on any computer I'm using
-- .bash_profile helps get things like aliases and environment variable right
-
 * Stow
 
-** Motivation
-Christian suggested [[https://www.gnu.org/software/stow/manual/stow.html][Stow]], so I wanted to read about it to see if I could understand how to use it.
-With a little effort to learn a command line tool, it makes it so that I don't have to maintain the sync scripts myself.
-
 ** Terms and Example Command
+
 There are some simple terms to work with stow
 
 1) stow directory - The directory that you run stow from, root of repo is intent
@@ -33,3 +23,7 @@ So,
 `stow -v -t $HOME -R emacs` will put ./emacs into ~/.emacs, which is where emacs expects it to be.
 
 In this same way, you can work with other dotfiles. Pretty neat.
+
+* Usage
+
+For all of the different dotfiles I have, run `scripts/stow-all` to install them locally.
