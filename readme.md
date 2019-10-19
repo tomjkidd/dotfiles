@@ -1,8 +1,8 @@
 # Motivation
 
-I'd like to be able to quickly sync the important files that I share across computers
-Should be as easy as cloning a git repo and being in business
+I'd like to be able to quickly sync the important files that I share across computers.
 
+Should be as easy as cloning a git repo and being in business.
 
 # Stow
 
@@ -11,8 +11,10 @@ Should be as easy as cloning a git repo and being in business
 
 There are some simple terms to work with stow
 
-1) stow directory - The directory that you run stow from, root of repo is intent
-2) package directory - An immediate child directory to the stow directory. Contains directories and files
+| Term | Definition |
+| --- | --- |
+| stow directory    | The directory that you run stow from, root of repo is intent |
+| package directory | An immediate child directory to the stow directory. Contains directories and files |
 
 The simple way to use this at the command line is...
 
