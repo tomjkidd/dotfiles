@@ -1,11 +1,13 @@
-* Motivation
+# Motivation
 
 I'd like to be able to quickly sync the important files that I share across computers
 Should be as easy as cloning a git repo and being in business
 
-* Stow
 
-** Terms and Example Command
+# Stow
+
+## Terms and Example Command
+
 
 There are some simple terms to work with stow
 
@@ -24,6 +26,10 @@ So,
 
 In this same way, you can work with other dotfiles. Pretty neat.
 
-* Usage
+## Usage
 
-For all of the different dotfiles I have, run `scripts/stow-all` to install them locally.
+Run the following to install all known dotfiles locally, from this repo
+
+```bash
+scripts/stow-all
+```
