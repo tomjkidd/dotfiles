@@ -173,7 +173,10 @@
   :config
   (setq org-agenda-files '("~/Dropbox/org/agenda.org"
                            "~/Dropbox/org/exocortex.org"
-                           "~/secrets/org/agenda.org")))
+                           "~/secrets/org/agenda.org"))
+  (org-babel-do-load-languages 'org-babel-load-languages
+    '((clojure . t)
+      (sql . t))))
 
 ;; Language Modes
 ;; ==============
@@ -230,6 +233,7 @@
   :config
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
   (add-hook 'js2-mode-hook (lambda ()
+                             (setq js-indent-level 2)
                              (setq js2-basic-offset 2)
                              (setq js2-bounce-indent-p t))))
 
@@ -546,6 +550,17 @@ just git grep the name."
   ;(setq beacon-color "#FF0000")
   )
 
+(use-package wgrep
+  :ensure t
+  :config
+  (setq wgrep-auto-save-buffer t))
+
+(use-package anzu
+  :ensure t)
+
+(use-package iedit
+  :ensure t)
+
 (defun personal-filename->icon (filename)
   "Return an icon based on a file or dir FILENAME.  Defaults to `all-the-icons-icon-for-file` after checking for a couple known cases that aren't quite what I want."
   (cond ((string-match ".emacs$" filename) (all-the-icons-fileicon "emacs" :height 1.0 :v-adjust -0.2 :face 'all-the-icons-purple))
@@ -821,6 +836,9 @@ point reaches the beginning or end of the buffer, stop there."
 (use-package fish-mode
   :ensure t)
 
+(use-package prettier-js
+  :ensure t)
+
 (defvar tk-shell-process-name nil
   "The space-separated string that contains \"<process-name> <buffer-name>\".")
 
@@ -905,10 +923,7 @@ If BUFFER-OR-NAME is nil return current buffer's mode."
 ;; TODO: Figure out which other characters need escapeing, and do that!
 (defun tk-tmux-escape-command (command)
   ""
-  (save-match-data
-    (if (string-match ";" command)
-        (replace-match "\\;" t t (s-trim command))
-      command)))
+  command)
 
 ;; Inspired by https://superuser.com/a/448692
 (defun es-send-via-tmux (command)
@@ -1072,24 +1087,3 @@ and want to 'pull' the next line up to it with one go."
 (provide 'fira-code-mode)
 
 (provide 'init)
-;;; init.el ends here
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(company-quickhelp-color-background "blue violet")
- '(company-quickhelp-color-foreground "thistle1")
- '(custom-safe-themes
-   (quote
-    ("ff7625ad8aa2615eae96d6b4469fcc7d3d20b2e1ebc63b761a349bebbb9d23cb" "3629b62a41f2e5f84006ff14a2247e679745896b5eaa1d5bcfbc904a3441b0cd" default)))
- '(package-selected-packages
-   (quote
-    (fish-mode nginx-mode linum-relative restclient fold-dwim git-timemachine dockerfile-mode easy-kill js2-mode define-word defined-word counsel-osx-app ob-clojure gist web-mode dumb-jump elisp-slime-nav ag flycheck-joker markdown-mode clojure-snippets flycheck rainbow-mode magit cider clojure-mode rainbow-delimiters paredit sr-speedbar smex monokai-theme moe-theme powerline auto-complete counsel ivy-hydra ace-window org-bullets which-key try use-package))))
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 2.0)))))
