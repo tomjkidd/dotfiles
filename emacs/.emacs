@@ -18,7 +18,7 @@
 ;; Form is (<id> . <location>)
 ;; <id> and <location> are strings, <location> can be an http link or dir
 (add-to-list 'package-archives
-	     '("melpa" . "https://melpa.org/packages/"))
+       '("melpa" . "https://melpa.org/packages/"))
 
 ;; See `Packaging Basics`
 (package-initialize)
@@ -53,6 +53,7 @@
 (setq create-lockfiles nil)
 
 ;; don't allow tab indentation
+;; NOTE: You can select a region and run `M-x untabify` to convert from tabs to spaces!
 (setq-default indent-tabs-mode nil)
 
 ;; disable electric-indent-mode, I prefer C-j
@@ -228,12 +229,15 @@
   (with-eval-after-load 'markdown-mode
     (define-key markdown-mode-map (kbd "C-c C-l") nil)))
 
+(add-to-list 'auto-mode-alist '("\\.json$" . js-mode))
+(add-hook 'js-mode-hook (lambda ()
+                          (setq js-indent-level 2)))
+
 (use-package js2-mode
   :ensure t
   :config
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
   (add-hook 'js2-mode-hook (lambda ()
-                             (setq js-indent-level 2)
                              (setq js2-basic-offset 2)
                              (setq js2-bounce-indent-p t))))
 
