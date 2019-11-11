@@ -56,6 +56,8 @@
 ;; NOTE: You can select a region and run `M-x untabify` to convert from tabs to spaces!
 (setq-default indent-tabs-mode nil)
 
+(setq sh-basic-offset 2)
+
 ;; disable electric-indent-mode, I prefer C-j
 (setq electric-indent-mode nil)
 
