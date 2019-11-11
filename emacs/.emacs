@@ -407,7 +407,6 @@ a symbol isn't necessary."
     (let* ((ns-and-name (thing-at-point 'symbol t))
            (name (car (last (split-string ns-and-name "/")))))
       (counsel-git-grep
-       nil
        name)))
 
   (defun tk-swiper-suffix-at-point ()
