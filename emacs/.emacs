@@ -221,6 +221,8 @@
               (with-eval-after-load 'clojure-mode
                 (define-key clojure-mode-map (kbd "C-c C-n") #'forward-sexp)
                 (define-key clojure-mode-map (kbd "C-c C-p") #'backward-sexp)
+                ;; Don't let sesman ruin the swiper experience!
+                (define-key clojure-mode-map (kbd "C-c C-s") nil)
                 ;(define-key clojure-mode-map (kbd "C-m") #'forward-sexp)
                 ;(define-key clojure-mode-map (kbd "C-]") #'backward-sexp)
                 ))))
