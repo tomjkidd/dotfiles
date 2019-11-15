@@ -184,6 +184,10 @@
 ;; Language Modes
 ;; ==============
 
+;; Don't let org-mode overwrite my custom pipe to tmux
+(define-key org-mode-map (kbd "C-c C-e") nil)
+
+
 (use-package clojure-mode
   :ensure t
   :config
@@ -932,15 +936,18 @@ If BUFFER-OR-NAME is nil return current buffer's mode."
   "Send a string COMMAND to pane 1 of tmux."
   (let ((cmd (string-join
               (append '("/usr/local/bin/tmux" "send-keys" "-t" "1")
-                      (list (concat "' " command " '"))
+                      (list "'"
+                            (replace-regexp-in-string "'" "\\'" command nil t)
+                            "'")
                       '("C-m"))
               " ")))
-    ;(print command)
-    ;(print cmd)
-    (call-process
-     "/bin/bash" nil nil nil
-     "-c"
-     cmd)))
+    (print cmd)
+    (shell-command cmd)))
+
+(call-process "/bin/bash" nil nil nil "-c" "/usr/local/bin/tmux send-keys -t 1 \" cat ~/scratch/20191115.remove-ca-data-sql-deletes.txt | awk '{ print \\$1 }' \" C-m")
+(shell-command "/usr/local/bin/tmux send-keys -t 1 'cat ~/scratch/20191115.remove-ca-data-sql-deletes.txt | awk \\'{ print $1 }\\''  C-m")
+(replace-regexp-in-string "'" "\\'" "da foo '{ is }' foobared" nil t)
+(shell-quote-argument "'")
 
 (defun s-trim-left (s)
   "Remove whitespace at the beginning of S."
@@ -1098,3 +1105,17 @@ and want to 'pull' the next line up to it with one go."
 (provide 'fira-code-mode)
 
 (provide 'init)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (org-mode js-mode prettier-js iedit anzu wgrep which-key web-mode use-package try sr-speedbar smex restclient rainbow-mode rainbow-delimiters powerline paredit org-bullets nginx-mode monokai-theme moe-theme markdown-mode magit linum-relative js2-mode ivy-hydra hungry-delete hlinum git-timemachine gist fold-dwim flycheck-joker fish-mode expand-region exec-path-from-shell elisp-slime-nav easy-kill dumb-jump dracula-theme dockerfile-mode define-word counsel-osx-app counsel company-quickhelp command-log-mode clojure-snippets cider beacon all-the-icons-ivy all-the-icons-dired aggressive-indent ag ace-window))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 2.0)))))
