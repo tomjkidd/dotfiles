@@ -927,16 +927,20 @@ If BUFFER-OR-NAME is nil return current buffer's mode."
    ((equal major-mode 'emacs-lisp-mode) (mark-defun))
    (t (print major-mode))))
 
-;; TODO: Figure out which other characters need escapeing, and do that!
-(defun tk-tmux-escape-command (command)
-  ""
-  command)
-
 ;; Inspired by https://superuser.com/a/448692
 (defun es-send-via-tmux (command)
   "Send a string COMMAND to pane 1 of tmux."
-  (print (tk-tmux-escape-command command))
-  (call-process "/usr/local/bin/tmux" nil nil nil "send-keys" "-t 1" (tk-tmux-escape-command command) "C-m"))
+  (let ((cmd (string-join
+              (append '("/usr/local/bin/tmux" "send-keys" "-t" "1")
+                      (list (concat "' " command " '"))
+                      '("C-m"))
+              " ")))
+    ;(print command)
+    ;(print cmd)
+    (call-process
+     "/bin/bash" nil nil nil
+     "-c"
+     cmd)))
 
 (defun s-trim-left (s)
   "Remove whitespace at the beginning of S."
@@ -1001,7 +1005,7 @@ Will move cursor to the end of the line."
               max (region-end))
       (setq min (point-at-bol)
             max (point-at-eol)))
-    (setq command (buffer-substring min max))
+    (setq command (buffer-substring-no-properties min max))
 
     (es-send-via-tmux command)
     (keyboard-quit)))
