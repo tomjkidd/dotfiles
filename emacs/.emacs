@@ -181,6 +181,27 @@
     '((clojure . t)
       (sql . t))))
 
+;; Flycheck error and linting
+;; ==========================
+
+(use-package flycheck
+  :ensure t
+  :init
+  (global-flycheck-mode t)
+  ;; Ran `gem install sqlint` to get this exe
+  ;; C-c ! v - Go to menu to enable stuff
+  (setq flycheck-sql-sqlint-executable "/usr/local/bin/sqlint"))
+
+(use-package flycheck-joker
+  :ensure t
+  ;; Adds flycheck support for clojure/clojurescript
+  ;; Ran `brew install candid82/brew/joker` to get this exe
+  )
+
+(use-package flycheck-clj-kondo
+  :ensure t)
+
+
 ;; Language Modes
 ;; ==============
 
@@ -193,6 +214,18 @@
   :config
   ;; select region and hit tab to do clojure-align
   (setq clojure-align-forms-automatically t)
+
+  ;; clj-kondo linting
+  (require 'flycheck-clj-kondo)
+
+  ;; Still use joker, too
+  (dolist (checker '(clj-kondo-clj clj-kondo-cljs clj-kondo-cljc clj-kondo-edn))
+    (setq flycheck-checkers (cons checker (delq checker flycheck-checkers))))
+  (dolist (checkers '((clj-kondo-clj . clojure-joker)
+                      (clj-kondo-cljs . clojurescript-joker)
+                      (clj-kondo-cljc . clojure-joker)
+                      (clj-kondo-edn . edn-joker)))
+    (flycheck-add-next-checker (car checkers) (cons 'error (cdr checkers))))
 
   ;; M-r paredit-raise-sexp will turn (some? [a b c]) to [a b c]
   ;; Note: In previous case, cursor is on '[' of [a b c]
@@ -255,22 +288,6 @@
   (setq web-mode-css-indent-offset 2)
   (add-to-list 'auto-mode-alist '("\\.scss?\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode)))
-
-;; Flycheck error and linting
-;; ==========================
-(use-package flycheck
-  :ensure t
-  :init
-  (global-flycheck-mode t)
-  ;; Ran `gem install sqlint` to get this exe
-  ;; C-c ! v - Go to menu to enable stuff
-  (setq flycheck-sql-sqlint-executable "/usr/local/bin/sqlint"))
-
-(use-package flycheck-joker
-  :ensure t
-  ;; Adds flycheck support for clojure/clojurescript
-  ;; Ran `brew install candid82/brew/joker` to get this exe
-  )
 
 ;; Autocomplete
 ;; ============
@@ -1017,10 +1034,60 @@ Will move cursor to the end of the line."
     (es-send-via-tmux command)
     (keyboard-quit)))
 
+(require 'dired)
+
+(defun tk-escape-command-for-osx-terminal (command)
+  "Send a string COMMAND to pane 1 of tmux."
+  (let ((cmd (dired-replace-in-string "\"" "\\\"" command)))
+    cmd))
+
+(defun tk-get-osx-terminal-command (command)
+  "Wraps given COMMAND in applescript, which can then be passed to `do-applescript` to execute the command in the terminal."
+  (format
+    "tell application \"Terminal\"
+    activate
+    delay 1
+    try
+    do script with command \"%s\" in window 1
+    on error
+    beep
+    end try
+    end tell"
+    (tk-escape-command-for-osx-terminal command)))
+
+(defun tk-send-command-to-osx-terminal (command)
+  "Sends COMMAND to the terminal, via applescript."
+  (interactive ())
+  (do-applescript
+   (tk-get-osx-terminal-command command)))
+
+(defun tk-send-region-to-osx-terminal()
+  "Return the selected region as a string."
+  (interactive ())
+  (do-applescript
+   (tk-get-osx-terminal-command (buffer-substring (region-beginning) (region-end))))
+  (goto-char (region-end))
+  (keyboard-quit))
+
+(defun tk-send-line-to-osx-terminal ()
+  "Send whole line that the cursor is on to a tmux terminal, using pane 1."
+  (interactive ())
+  (tk-mark-line)
+  (tk-send-region-to-osx-terminal))
+
+(defun tk-send-sexp-to-osx-terminal ()
+  "Send an sexp to a terminal."
+  (interactive ())
+  (beginning-of-defun)
+  (easy-mark-sexp)
+  (tk-send-region-to-osx-terminal))
+
+
+
 (global-set-key (kbd "C-c C-w") 'sh-send-sexp)
-(global-set-key (kbd "C-c C-e") 'tk-send-sexp-to-tmux)
-(global-set-key (kbd "C-c e") 'tk-send-region-to-tmux)
-(global-set-key (kbd "C-c C-l") 'tk-send-line-to-tmux)
+(global-set-key (kbd "C-c C-e") 'tk-send-sexp-to-osx-terminal)
+(global-set-key (kbd "C-c e") 'tk-send-region-to-osx-terminal)
+(global-set-key (kbd "C-c C-l") 'tk-send-line-to-osx-terminal)
 
 (defun tk-copy-file-name-to-clipboard ()
   "Copy the current buffer file name to the clipboard."
@@ -1112,7 +1179,8 @@ and want to 'pull' the next line up to it with one go."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (org-mode js-mode prettier-js iedit anzu wgrep which-key web-mode use-package try sr-speedbar smex restclient rainbow-mode rainbow-delimiters powerline paredit org-bullets nginx-mode monokai-theme moe-theme markdown-mode magit linum-relative js2-mode ivy-hydra hungry-delete hlinum git-timemachine gist fold-dwim flycheck-joker fish-mode expand-region exec-path-from-shell elisp-slime-nav easy-kill dumb-jump dracula-theme dockerfile-mode define-word counsel-osx-app counsel company-quickhelp command-log-mode clojure-snippets cider beacon all-the-icons-ivy all-the-icons-dired aggressive-indent ag ace-window))))
+    (org-mode js-mode prettier-js iedit anzu wgrep which-key web-mode use-package try sr-speedbar smex restclient rainbow-mode rainbow-delimiters powerline paredit org-bullets nginx-mode monokai-theme moe-theme markdown-mode magit linum-relative js2-mode ivy-hydra hungry-delete hlinum git-timemachine gist fold-dwim flycheck-joker fish-mode expand-region exec-path-from-shell elisp-slime-nav easy-kill dumb-jump dracula-theme dockerfile-mode define-word counsel-osx-app counsel company-quickhelp command-log-mode clojure-snippets cider beacon all-the-icons-ivy all-the-icons-dired aggressive-indent ag ace-window)))
+ '(safe-local-variable-values (quote ((cider-default-clj-repl . clojure-cli)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
