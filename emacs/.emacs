@@ -948,24 +948,6 @@ If BUFFER-OR-NAME is nil return current buffer's mode."
    ((equal major-mode 'emacs-lisp-mode) (mark-defun))
    (t (print major-mode))))
 
-;; Inspired by https://superuser.com/a/448692
-(defun es-send-via-tmux (command)
-  "Send a string COMMAND to pane 1 of tmux."
-  (let ((cmd (string-join
-              (append '("/usr/local/bin/tmux" "send-keys" "-t" "1")
-                      (list "'"
-                            (replace-regexp-in-string "'" "\\'" command nil t)
-                            "'")
-                      '("C-m"))
-              " ")))
-    (print cmd)
-    (shell-command cmd)))
-
-(call-process "/bin/bash" nil nil nil "-c" "/usr/local/bin/tmux send-keys -t 1 \" cat ~/scratch/20191115.remove-ca-data-sql-deletes.txt | awk '{ print \\$1 }' \" C-m")
-(shell-command "/usr/local/bin/tmux send-keys -t 1 'cat ~/scratch/20191115.remove-ca-data-sql-deletes.txt | awk \\'{ print $1 }\\''  C-m")
-(replace-regexp-in-string "'" "\\'" "da foo '{ is }' foobared" nil t)
-(shell-quote-argument "'")
-
 (defun s-trim-left (s)
   "Remove whitespace at the beginning of S."
   (declare (pure t) (side-effect-free t))
@@ -1037,8 +1019,11 @@ Will move cursor to the end of the line."
 (require 'dired)
 
 (defun tk-escape-command-for-osx-terminal (command)
-  "Send a string COMMAND to pane 1 of tmux."
+  "For given COMMAND, return the escaped command which ensures that a double-quote is properly escaped."
+  (interactive "sCommand:")
   (let ((cmd (dired-replace-in-string "\"" "\\\"" command)))
+    (when (called-interactively-p 'interactive)
+      (message cmd))
     cmd))
 
 (defun tk-get-osx-terminal-command (command)
@@ -1057,32 +1042,30 @@ Will move cursor to the end of the line."
 
 (defun tk-send-command-to-osx-terminal (command)
   "Sends COMMAND to the terminal, via applescript."
-  (interactive ())
+  (interactive "sCommand:")
   (do-applescript
    (tk-get-osx-terminal-command command)))
 
 (defun tk-send-region-to-osx-terminal()
-  "Return the selected region as a string."
-  (interactive ())
+  "Send the selected region to the terminal, via applescript."
+  (interactive)
   (do-applescript
    (tk-get-osx-terminal-command (buffer-substring (region-beginning) (region-end))))
   (goto-char (region-end))
   (keyboard-quit))
 
 (defun tk-send-line-to-osx-terminal ()
-  "Send whole line that the cursor is on to a tmux terminal, using pane 1."
-  (interactive ())
+  "Send the whole line that the cursor is on to the terminal, via applescript."
+  (interactive)
   (tk-mark-line)
   (tk-send-region-to-osx-terminal))
 
 (defun tk-send-sexp-to-osx-terminal ()
-  "Send an sexp to a terminal."
-  (interactive ())
+  "Send an sexp to a terminal, via applescript."
+  (interactive)
   (beginning-of-defun)
   (easy-mark-sexp)
   (tk-send-region-to-osx-terminal))
-
-
 
 (global-set-key (kbd "C-c C-w") 'sh-send-sexp)
 (global-set-key (kbd "C-c C-e") 'tk-send-sexp-to-osx-terminal)
